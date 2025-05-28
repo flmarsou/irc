@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rothiery <rothiery@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 14:32:57 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/05/27 17:07:03 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/05/28 12:32:02 by rothiery         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
+bool	isRuning = true;
 
 Server::Server(const unsigned short port, const std::string &password)
 	:	_port(port), _password(password)
@@ -55,7 +57,7 @@ Server::~Server()
 	// Close all the Sockets
 	for (unsigned int i = 0; i < this->_fds.size(); i++)
 	{
-		if (close(this->_serverSocket) == -1)
+		if (close(this->_fds[i].fd) == -1)
 			throw (std::runtime_error(ERROR "Failed to close a Socket!"));
 		else
 			std::cout << SUCCESS "Socket (fd=" << this->_fds[i].fd << ") closed!" << std::endl;
@@ -110,13 +112,25 @@ void	Server::readFromClient(unsigned int index)
 	}
 }
 
+void	signalHandler(int signum)
+{
+	(void)signum;
+    std::cout << "\n" WARNING "Interrupt signal (ctrl + c) received.\n";
+	isRuning = false;
+}
+
 void	Server::run()
 {
-	while (true)
+	signal(SIGINT, signalHandler);
+
+	while (isRuning == true)
 	{
 		if (poll(this->_fds.data(), this->_fds.size(), -1) == -1)
+		{
+			if (errno == EINTR)
+				continue ;
 			throw (std::runtime_error(ERROR "Failed to Poll!"));
-
+		}
 		for (unsigned int i = 0; i < this->_fds.size(); i++)
 		{
 			if (this->_fds[i].revents & POLL_IN)
