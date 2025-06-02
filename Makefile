@@ -6,7 +6,7 @@
 #    By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/26 09:43:40 by flmarsou          #+#    #+#              #
-#    Updated: 2025/05/28 11:42:35 by flmarsou         ###   ########.fr        #
+#    Updated: 2025/06/02 11:43:23 by flmarsou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,10 @@ EXE			:=	ircserv
 
 # Files
 SRC			:=	src/main.cpp \
-				src/parser.cpp \
 				src/Server.cpp \
-				src/Client.cpp 
+				src/Client.cpp \
+				src/ServerCommands.cpp \
+				src/commands/ServerNick.cpp \
 
 # Variables
 CC			:=	c++
