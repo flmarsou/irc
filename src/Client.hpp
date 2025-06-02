@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:52:03 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/05/28 12:20:45 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/05/28 13:07:51 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ class	Client
 		const std::string	&getUser() const;
 
 	private:
-		const int				_fd;
-		const char				*_ip;
-		const unsigned short	_port;
-		std::string				_nick;
-		std::string				_user;
+		const int		_fd;
+		const char		*_ip;
+		unsigned short	_port;
+		std::string		_nick;
+		std::string		_user;
 };

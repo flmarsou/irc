@@ -6,15 +6,16 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 14:27:36 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/05/27 16:36:16 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/02 10:29:00 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-# include "irc.hpp"
+# include "Client.hpp"
 
 # include <vector>
+# include <map>
 
 # define IPv4			AF_INET
 # define TCP			SOCK_STREAM
@@ -34,7 +35,11 @@ class	Server
 		const std::string		_password;
 		int						_serverSocket;
 		std::vector<pollfd>		_fds;
+		std::map<int, Client>	_clients;
 
 		void	acceptClient();
 		void	readFromClient(unsigned int index);
+
+		void	parse(int index, std::string &input);
+		void	commandNick(const std::map<int, Client>::iterator &it, std::string &input);
 };

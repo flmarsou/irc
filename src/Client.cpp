@@ -6,11 +6,15 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:57:01 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/05/28 12:21:07 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/02 12:06:28 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
+
+// ========================================================================== //
+//   Constructors                                                             //
+// ========================================================================== //
 
 Client::Client(const int fd, const char *ip, const unsigned short port)
 	:	_fd(fd), _ip(ip), _port(port)
@@ -18,6 +22,10 @@ Client::Client(const int fd, const char *ip, const unsigned short port)
 	std::cout << SUCCESS "New client connected!" << std::endl;
 	std::cout << INFO "Client FD/IP: (fd=" << this->_fd << ") " << this->_ip << ":" << this->_port << std::endl;
 }
+
+// ========================================================================== //
+//   Setters & Getters                                                        //
+// ========================================================================== //
 
 int					Client::getFD() const
 {

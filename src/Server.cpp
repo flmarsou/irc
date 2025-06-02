@@ -3,16 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rothiery <rothiery@student.42.fr>          +#+  +:+       +#+        */
+/*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 14:32:57 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/05/28 12:32:02 by rothiery         ###   ########.fr       */
+/*   Updated: 2025/06/02 12:06:57 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
 bool	isRuning = true;
+
+static void	signalHandler(int signum)
+{
+	(void)signum;
+    std::cout << "\n" WARNING "Interrupt signal (ctrl + c) received." << std::endl;
+	isRuning = false;
+}
+
+// ========================================================================== //
+//   Constructors                                                             //
+// ========================================================================== //
 
 Server::Server(const unsigned short port, const std::string &password)
 	:	_port(port), _password(password)
@@ -64,6 +75,10 @@ Server::~Server()
 	}
 }
 
+// ========================================================================== //
+//   Methods                                                                  //
+// ========================================================================== //
+
 void	Server::acceptClient()
 {
 	// Defining Client Address
@@ -78,15 +93,15 @@ void	Server::acceptClient()
 		return ;
 	}
 
-	// Add Client Socket to the List of FDs
+	// Add Client Socket to the FD Vector
 	pollfd	pfd;
 	pfd.fd = clientSocket;
 	pfd.events = POLL_IN;
 	pfd.revents = 0;
 	this->_fds.push_back(pfd);
 
-	std::cout << SUCCESS "New client connected (fd=" << clientSocket << ")!\n";
-	std::cout << INFO "Client IP: " << inet_ntoa(clientAddress.sin_addr) << ":" << ntohs(clientAddress.sin_port) << std::endl;
+	// Add Client to the Client Map
+	this->_clients.insert(std::make_pair(clientSocket, Client(clientSocket, inet_ntoa(clientAddress.sin_addr), ntohs(clientAddress.sin_port))));
 }
 
 void	Server::readFromClient(unsigned int index)
@@ -105,25 +120,19 @@ void	Server::readFromClient(unsigned int index)
 	// Success
 	else
 	{
+
 		buffer[bytesRead] = '\0';
-		std::string	message(buffer);
+		std::string	input(buffer);
 
-		std::cout << MSG "Received from (fd=" << this->_fds[index].fd << "): " << message;
+		parse(index, input);
 	}
-}
-
-void	signalHandler(int signum)
-{
-	(void)signum;
-    std::cout << "\n" WARNING "Interrupt signal (ctrl + c) received.\n";
-	isRuning = false;
 }
 
 void	Server::run()
 {
 	signal(SIGINT, signalHandler);
 
-	while (isRuning == true)
+	while (isRuning)
 	{
 		if (poll(this->_fds.data(), this->_fds.size(), -1) == -1)
 		{
