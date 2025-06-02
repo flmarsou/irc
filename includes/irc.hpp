@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rothiery <rothiery@student.42.fr>          +#+  +:+       +#+        */
+/*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 09:45:17 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/05/28 12:08:41 by rothiery         ###   ########.fr       */
+/*   Updated: 2025/06/02 16:00:44 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 # include "debug.hpp"
+# include "errors.hpp"
 
 # include <cstdlib>
 # include <cstring>
