@@ -6,7 +6,7 @@
 #    By: rothiery <rothiery@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/26 09:43:40 by flmarsou          #+#    #+#              #
-#    Updated: 2025/06/02 11:59:44 by rothiery         ###   ########.fr        #
+#    Updated: 2025/06/02 12:43:44 by rothiery         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,11 +23,11 @@ SRC			:=	main.cpp \
 				ServerCommands.cpp \
 				ServerNick.cpp \
 
-OBJ			:= ${SRC:%.cpp=obj/%.o}
+OBJ			:= ${addprefix obj/,${notdir $(SRC:.cpp=.o)}}
 
 # Variables
 CC			:=	c++
-CFLAGS		:=	-Wall -Wextra -std=c++98 -Iincludes # Add -Werror
+CFLAGS		:=	-Wall -Wextra -std=c++98 -I includes -I src # Add -Werror
 
 # Makefile
 all			:	${EXE}
@@ -36,7 +36,7 @@ ${EXE}		:	${OBJ}
 				${CC} ${CFLAGS} ${OBJ} -o ${EXE}
 
 obj/%.o: %.cpp
-	@mkdir -p obj/$(dir $<)
+	@mkdir -p obj
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean		:
