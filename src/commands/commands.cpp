@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 14:04:57 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 13:53:40 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 15:00:27 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ void	Server::commands(int index, std::string &input)
 
 	if (input.substr(0, 5) == "NICK ")
 		commandNick(it, trimInput(input.substr(5)));
+	else if (input.substr(0, 5) == "USER ")
+		commandUser(it, trimInput(input.substr(5)));
 	else if (input.substr(0, 5) == "PASS ")
 		commandPass(it, trimInput(input.substr(5)));
 }

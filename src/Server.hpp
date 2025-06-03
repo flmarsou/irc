@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 14:27:36 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 13:52:50 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 14:39:33 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,5 @@ class	Server
 		void	commands(int index, std::string &input);
 		void	commandPass(const std::map<int, Client *>::iterator &it, const std::string &input);
 		void	commandNick(const std::map<int, Client *>::iterator &it, const std::string &input);
+		void	commandUser(const std::map<int, Client *>::iterator &it, const std::string &input);
 };
