@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 14:32:57 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 13:26:56 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 14:06:49 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,9 @@ Server::Server(const unsigned short port, const std::string &password)
 
 Server::~Server()
 {
+	for (std::map<int, Client *>::const_iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
+		delete it->second;
+
 	// Close all the Sockets
 	for (unsigned int i = 0; i < this->_fds.size(); i++)
 	{
@@ -86,7 +89,7 @@ void	Server::acceptClient()
 	socklen_t	clientLength = sizeof(clientAddress);
 
 	// Creating the Client Socket
-	int			clientSocket = accept(this->_serverSocket, (sockaddr *)&clientAddress, &clientLength);
+	int	clientSocket = accept(this->_serverSocket, (sockaddr *)&clientAddress, &clientLength);
 	if (clientSocket == -1)
 	{
 		std::cerr << WARNING "Failed to accept a new Client Socket (fd=" << clientSocket << ")!" << std::endl;
@@ -99,9 +102,10 @@ void	Server::acceptClient()
 	pfd.events = POLL_IN;
 	pfd.revents = 0;
 	this->_fds.push_back(pfd);
-
+	
 	// Add Client to the Client Map
-	this->_clients.insert(std::make_pair(clientSocket, Client(clientSocket, inet_ntoa(clientAddress.sin_addr), ntohs(clientAddress.sin_port))));
+	Client	*client = new Client(clientSocket, inet_ntoa(clientAddress.sin_addr), ntohs(clientAddress.sin_port));
+	this->_clients.insert(std::make_pair(clientSocket, client));
 }
 
 void	Server::readFromClient(unsigned int index)
@@ -113,8 +117,21 @@ void	Server::readFromClient(unsigned int index)
 	if (bytesRead <= 0)
 	{
 		std::cout << INFO "Client (fd=" << this->_fds[index].fd << ") disconnected!" << std::endl;
+
+		// 1. Closes socket
 		close(this->_fds[index].fd);
+
+		// 2. Deletes client object
+		const std::map<int, Client *>::iterator	it = this->_clients.find(this->_fds[index].fd);
+		if (it != this->_clients.end())
+		{
+			delete it->second;
+			this->_clients.erase(it);
+		}
+
+		// 3. Removes from pollfd vector
 		this->_fds.erase(this->_fds.begin() + index);
+
 		return ;
 	}
 	// Success
