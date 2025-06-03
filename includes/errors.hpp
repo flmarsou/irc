@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 15:37:41 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 13:31:08 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 15:19:27 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,3 +37,10 @@
 
 // Returned to indicate a failed attempt at registering a connection for which a password was required and was either not given or incorrect.
 # define ERR_PASSWDMISMATCH		"464 :Password incorrect\n"
+
+// ========================================================================== //
+//   Miscellaneous                                                            //
+// ========================================================================== //
+
+// Returned by the server by numerous commands to indicate to the client that it didn't supply enough parameters.
+# define ERR_NEEDMOREPARAMS(command)	"461 " + command + " :Not enough parameters\n"
