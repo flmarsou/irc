@@ -103,7 +103,7 @@ void	Server::commandUser(const std::map<int, Client *>::iterator &it, const std:
 	// Sends confirmation message to the server
 	debug(it, username, realname);
 
-	// Changes the client username and nickname
+	// Changes the client username and realname
 	it->second->setUsername(username);
 	it->second->setRealname(realname);
 }
