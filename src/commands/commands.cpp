@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 14:04:57 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 13:34:06 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:53:40 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ static const std::string	trimInput(std::string input)
 
 void	Server::commands(int index, std::string &input)
 {
-	const std::map<int, Client>::iterator	it = this->_clients.find(this->_fds[index].fd);
+	const std::map<int, Client *>::iterator	it = this->_clients.find(this->_fds[index].fd);
 
-	if (!it->second.getPassword())
+	if (!it->second->getPassword())
 	{
 		if (input.substr(0, 5) == "PASS ")
 			commandPass(it, trimInput(input.substr(5)));

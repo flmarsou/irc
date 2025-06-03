@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 14:27:36 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 13:08:51 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:52:50 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ class	Server
 		const std::string		_password;
 		int						_serverSocket;
 		std::vector<pollfd>		_fds;
-		std::map<int, Client>	_clients;
+		std::map<int, Client *>	_clients;
 
 		void	acceptClient();
 		void	readFromClient(unsigned int index);
 
 		void	commands(int index, std::string &input);
-		void	commandPass(const std::map<int, Client>::iterator &it, const std::string &input);
-		void	commandNick(const std::map<int, Client>::iterator &it, const std::string &input);
+		void	commandPass(const std::map<int, Client *>::iterator &it, const std::string &input);
+		void	commandNick(const std::map<int, Client *>::iterator &it, const std::string &input);
 };
