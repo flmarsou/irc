@@ -6,7 +6,7 @@
 #    By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/26 09:43:40 by flmarsou          #+#    #+#              #
-#    Updated: 2025/06/02 12:53:13 by flmarsou         ###   ########.fr        #
+#    Updated: 2025/06/03 13:24:00 by flmarsou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,9 +19,9 @@ VPATH		:=	src : src/commands
 SRC			:=	main.cpp \
 				Server.cpp \
 				Client.cpp \
-				ServerCommands.cpp \
-				ServerNick.cpp \
-				ServerMessage.cpp \
+				commands.cpp \
+				nick.cpp \
+				pass.cpp
 
 OBJ			:=	${addprefix obj/,${notdir $(SRC:.cpp=.o)}}
 
