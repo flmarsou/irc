@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 14:04:57 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 13:30:19 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:34:06 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,7 @@ void	Server::commands(int index, std::string &input)
 		if (input.substr(0, 5) == "PASS ")
 			commandPass(it, trimInput(input.substr(5)));
 		else
-		{
-			const std::string	numerical = ERR_NOTREGISTERED;
-			send(it->first, numerical.c_str(), numerical.size(), 0);
-		}
+			send(it->first, ERR_NOTREGISTERED, std::strlen(ERR_NOTREGISTERED), 0);
 		return ;
 	}
 

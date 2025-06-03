@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 13:08:04 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 13:25:39 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:35:14 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,14 @@ void	Server::commandPass(const std::map<int, Client>::iterator &it, const std::s
 	// Checks if already logged in
 	if (it->second.getPassword())
 	{
-		const std::string	numerical = ERR_ALREADYREGISTRED;
-		send(it->first, numerical.c_str(), numerical.size(), 0);
+		send(it->first, ERR_ALREADYREGISTRED, std::strlen(ERR_ALREADYREGISTRED), 0);
 		return ;
 	}
 
 	// Checks if the password matches
 	if (input != this->_password)
 	{
-		const std::string	numerical = ERR_PASSWDMISMATCH;
-		send(it->first, numerical.c_str(), numerical.size(), 0);
+		send(it->first, ERR_PASSWDMISMATCH, std::strlen(ERR_PASSWDMISMATCH), 0);
 		return ;
 	}
 	// Sends confirmation message to the client
