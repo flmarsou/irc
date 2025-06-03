@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 10:47:19 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/05/27 16:34:53 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 12:52:58 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,3 +19,4 @@
 # define WARNING	"\e[35m[!] - Warning: \e[0m"
 # define INFO		"\e[36m[i] - Info: \e[0m"
 # define MSG		"\e[33m[#] - Message: \e[0m"
+# define CMD(cmd)	"\e[34m[/] - " + cmd + ": \e[0m"
