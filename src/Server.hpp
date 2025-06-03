@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 14:27:36 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/02 12:56:17 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:08:51 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ class	Server
 		void	acceptClient();
 		void	readFromClient(unsigned int index);
 
-		void	parse(int index, std::string &input);
-		void	commandNick(const std::map<int, Client>::iterator &it, std::string &input);
-		void	commandMessage(const std::string &name, const std::string &input, int index);
+		void	commands(int index, std::string &input);
+		void	commandPass(const std::map<int, Client>::iterator &it, const std::string &input);
+		void	commandNick(const std::map<int, Client>::iterator &it, const std::string &input);
 };
