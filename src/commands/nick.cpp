@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 11:38:38 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 13:54:22 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 14:35:56 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ static void	debug(const std::map<int, Client *>::const_iterator &it, const std::
 {
 	std::cout << CMD(std::string("NICK")) << "Client (fd=" << it->first << ") " << it->second->getIP() << ":" << it->second->getPort() << " => ";
 
-	if (it->second->getNick().empty())
+	if (it->second->getNickname().empty())
 		std::cout << "Changed their nickname to \"" << input << "\"!" << std::endl;
 	else
-		std::cout << "Changed their nickname from \"" << it->second->getNick() << "\" to \"" << input << "\"!" << std::endl;
+		std::cout << "Changed their nickname from \"" << it->second->getNickname() << "\" to \"" << input << "\"!" << std::endl;
 }
 
 static bool	checkNick(const std::string &nick)
@@ -61,7 +61,7 @@ void	Server::commandNick(const std::map<int, Client *>::iterator &it, const std:
 	// Checks if the input doesn't exist
 	for (std::map<int, Client *>::const_iterator c_it = this->_clients.begin(); c_it != this->_clients.end(); c_it++)
 	{
-		if (input == c_it->second->getNick())
+		if (input == c_it->second->getNickname())
 		{
 			const std::string	numerical = ERR_NICKNAMEINUSE(input);
 			send(it->first, numerical.c_str(), numerical.size(), 0);
@@ -73,7 +73,7 @@ void	Server::commandNick(const std::map<int, Client *>::iterator &it, const std:
 	debug(it, input);
 
 	// Changes the client nickname
-	it->second->setNick(input);
+	it->second->setNickname(input);
 
 	// Sends confirmation message to the client
 	const std::string	buffer = "Your nickname has been changed to: \"" + input + "\"!\n";
