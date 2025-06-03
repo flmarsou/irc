@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:57:01 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 13:23:54 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 14:07:48 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,16 @@
 Client::Client(const int fd, const char *ip, const unsigned short port)
 	:	_fd(fd), _ip(ip), _port(port), _nick(""), _user(""), _hasPassword(false)
 {
-	std::cout << SUCCESS "New client connected!" << std::endl;
-	std::cout << INFO "Client FD/IP: (fd=" << this->_fd << ") " << this->_ip << ":" << this->_port << std::endl;
+	std::cout << SUCCESS "!" << std::endl;
+	std::cout << INFO "New client (fd=" << this->_fd << ") " << this->_ip << ":" << this->_port << " connected!" << std::endl;
+}
+
+Client::~Client()
+{
+	if (this->_nick.empty())
+		std::cout << INFO "Client (fd=" << this->_fd << ") deleted!" << std::endl;
+	else
+		std::cout << INFO "Client " << this->_nick << " (fd=" << this->_fd << ") deleted!" << std::endl;
 }
 
 // ========================================================================== //

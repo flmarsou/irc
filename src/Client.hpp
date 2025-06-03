@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:52:03 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 13:23:46 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:36:22 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ class	Client
 {
 	public:
 		Client(const int fd, const char *ip, const unsigned short port);
+		~Client();
 
 		int					getFD() const;
 		const char			*getIP() const;
