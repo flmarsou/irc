@@ -6,7 +6,7 @@
 /*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 14:32:57 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/02 12:06:57 by flmarsou         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:26:56 by flmarsou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,10 @@ void	Server::readFromClient(unsigned int index)
 	// Success
 	else
 	{
-
 		buffer[bytesRead] = '\0';
 		std::string	input(buffer);
 
-		parse(index, input);
+		commands(index, input);
 	}
 }
 
