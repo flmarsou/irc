@@ -32,3 +32,9 @@
 
 // Special ping for IRC clients
 # define NICKNAME_RAW(oldNick, newNick, username, hostname)	":" + oldNick + "!" + username + "@" + hostname + " NICK :" + newNick + "\r\n"
+
+// ========================================================================== //
+//     JOIN                                                                   //
+// ========================================================================== //
+
+# define ERR_BADCHANMASK(channel)	"476 " + channel + " :Bad Channel Mask\r\n"

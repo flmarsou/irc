@@ -87,7 +87,7 @@ void	Server::executeCommandRegistered(Client *client, const std::vector<std::str
 			client->PrintMessage(ERR_NEEDMOREPARAMS(tokens[0]));
 		return ;
 	}
-	else if (tokens[0] != "PRIVMSG" && tokens[0] != "JOIN" && tokens[0] != "TOPIC" && tokens[0] != "KICK" && tokens[0] != "NICK")
+	else if (tokens[0] != "PRIVMSG" && tokens[0] != "JOIN" && tokens[0] != "TOPIC" && tokens[0] != "KICK" && tokens[0] != "NICK" && tokens[0] != "MODE")
 		client->PrintMessage(ERR_UNKNOWNCOMMAND(tokens[0]));
 	else if (tokens[0] == "NICK")
 		nick(client, tokens[1]);

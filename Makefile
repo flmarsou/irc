@@ -6,7 +6,7 @@
 #    By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/14 09:25:28 by flmarsou          #+#    #+#              #
-#    Updated: 2025/08/14 16:48:57 by flmarsou         ###   ########.fr        #
+#    Updated: 2025/08/15 12:53:02 by flmarsou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRC			:=	main.cpp \
 				nick.cpp \
 				user.cpp \
 				Client.cpp \
+				Channel.cpp \
 
 OBJ			:=	${addprefix obj/,${notdir $(SRC:.cpp=.o)}}
 

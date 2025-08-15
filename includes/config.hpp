@@ -6,6 +6,10 @@
 # include <cstdlib>
 # include <cstring>
 # include <iostream>
+# include <vector>
+# include <map>
+# include <set>
+# include <algorithm>
 
 # include <sys/stat.h>		// fstat
 # include <sys/socket.h>	// socket, setsockopt, getsockname, bind, connect, listen, accept, recv, send

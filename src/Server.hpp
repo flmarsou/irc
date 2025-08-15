@@ -3,9 +3,7 @@
 # include "config.hpp"
 
 # include "Client.hpp"
-
-# include <vector>
-# include <map>
+# include "Channel.hpp"
 
 # define IPv4			AF_INET
 # define TCP			SOCK_STREAM
@@ -33,8 +31,9 @@ class	Server
 
 		// ===== Data =====
 
-		std::vector<pollfd>		_fds;
-		std::map<i32, Client *>	_clients;
+		std::vector<pollfd>					_fds;
+		std::map<i32, Client *>				_clients;
+		std::map<std::string, Channel *>	_channels;
 
 		// ===== Methods =====
 
