@@ -1,22 +1,34 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   debug.hpp                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/26 10:47:19 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 12:52:58 by flmarsou         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #pragma once
 
-# include <iostream>
+# define SUCCESS	"\e[32m[v] "
+# define INFO		"\e[36m[i] "
+# define WARNING	"\e[35m[!] "
+# define ERROR		"\e[31m[x] "
+# define MSG		"\e[33m[#] "
+# define RESET		"\e[0m"
 
-# define ERROR		"\e[31m[x] - Error: \e[0m"
-# define SUCCESS	"\e[32m[v] - Success: \e[0m"
-# define WARNING	"\e[35m[!] - Warning: \e[0m"
-# define INFO		"\e[36m[i] - Info: \e[0m"
-# define MSG		"\e[33m[#] - Message: \e[0m"
-# define CMD(cmd)	"\e[34m[/] - " + cmd + ": \e[0m"
+// ========================================================================== //
+//     MISC                                                                   //
+// ========================================================================== //
+
+# define ERR_UNKNOWNCOMMAND(command)	"421 " + command + " :Unknown command\r\n"
+# define ERR_NEEDMOREPARAMS(command)	"461 " + command + " :Not enough parameters\r\n"
+
+// ========================================================================== //
+//     PASS                                                                   //
+// ========================================================================== //
+
+# define ERR_NOTREGISTERED		"451 :You have not registered\r\n"
+# define ERR_ALREADYREGISTRED	"462 :You may not reregister\r\n"
+# define ERR_PASSWDMISMATCH		"464 :Password incorrect\r\n"
+
+// ========================================================================== //
+//     NICK                                                                   //
+// ========================================================================== //
+
+# define ERR_NONICKNAMEGIVEN			"431 :No nickname given\r\n"
+# define ERR_ERRONEUSNICKNAME(nickname)	"432 " + nickname + " :Erroneus nickname\r\n"
+# define ERR_NICKNAMEINUSE(nickname)	"433 " + nickname + " :Nickname is already in use\r\n"
+
+// Special ping for IRC clients
+# define NICKNAME_RAW(oldNick, newNick, username, hostname)	":" + oldNick + "!" + username + "@" + hostname + " NICK :" + newNick + "\r\n"
