@@ -1,16 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/26 14:27:36 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 14:39:33 by flmarsou         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #pragma once
+
+# include "config.hpp"
 
 # include "Client.hpp"
 
@@ -25,23 +15,37 @@
 class	Server
 {
 	public:
-		Server(const unsigned short port, const std::string &password);
+		// ===== Setup =====
+
+		Server(const u16 serverPort, const std::string &password);
 		~Server();
 
-		void	run();
+		// ===== Loop =====
+
+		void	Run();
 
 	private:
-		const unsigned short	_port;
-		const std::string		_password;
-		int						_serverSocket;
+		// ===== Settings =====
+
+		const u16			_port;
+		const std::string	_password;
+		i32					_socket;
+
+		// ===== Data =====
+
 		std::vector<pollfd>		_fds;
-		std::map<int, Client *>	_clients;
+		std::map<i32, Client *>	_clients;
+
+		// ===== Methods =====
 
 		void	acceptClient();
-		void	readFromClient(unsigned int index);
+		void	readClient(u32 index);
 
-		void	commands(int index, std::string &input);
-		void	commandPass(const std::map<int, Client *>::iterator &it, const std::string &input);
-		void	commandNick(const std::map<int, Client *>::iterator &it, const std::string &input);
-		void	commandUser(const std::map<int, Client *>::iterator &it, const std::string &input);
+		void	executeCommand(Client *client, const i8 *buffer);
+		void	executeCommandNonRegistered(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
+		void	executeCommandRegistered(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
+
+		void	pass(Client *client, const std::string &password);
+		void	nick(Client *client, const std::string &nickname);
+		void	user(Client *client, const std::vector<std::string> &tokens);
 };

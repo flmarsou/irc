@@ -1,170 +1,166 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/26 14:32:57 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 14:06:49 by flmarsou         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Server.hpp"
 
-bool	isRuning = true;
+// ========================================================================== //
+//    Setup                                                                   //
+// ========================================================================== //
 
-static void	signalHandler(int signum)
+bool	gIsRunning = true;
+
+static void	interruptHandler(int signum)
 {
 	(void)signum;
-    std::cout << "\n" WARNING "Interrupt signal (ctrl + c) received." << std::endl;
-	isRuning = false;
+	std::cout << '\n' << WARNING "Interrupt signal (ctrl + c) received" RESET << std::endl;
+	gIsRunning = false;
 }
 
-// ========================================================================== //
-//   Constructors                                                             //
-// ========================================================================== //
-
-Server::Server(const unsigned short port, const std::string &password)
-	:	_port(port), _password(password)
+Server::Server(const u16 serverPort, const std::string &password)
+	:	_port(serverPort)
+	,	_password(password)
 {
-	// Creating the Server Socket
-	this->_serverSocket = socket(IPv4, TCP, 0);
-	if (this->_serverSocket == -1)
-		throw (std::runtime_error(ERROR "Failed to create the Server Socket!"));
-	else
-		std::cout << SUCCESS "Server Socket (fd=" << this->_serverSocket << ") created!" << std::endl;
+	// ===== Interrupt Signal =====
+	signal(SIGINT, interruptHandler);
 
-	// Defining Server Address
-	sockaddr_in	serverAddress;
-	serverAddress.sin_family = IPv4;
-	serverAddress.sin_port = htons(this->_port);
-	serverAddress.sin_addr.s_addr = INADDR_ANY;
+	// ===== Server Socket =====
+	_socket = socket(IPv4, TCP, 0);
+	if (_socket == -1)
+		throw std::runtime_error("Failed to create the Server Socket");
+	std::cout << SUCCESS "Server socket (fd=" << _socket << ") created" RESET << std::endl;
 
-	// Binding the Server Socket
-	if (bind(this->_serverSocket, (sockaddr *)&serverAddress, sizeof(serverAddress)) == -1)
-		throw (std::runtime_error(ERROR "Failed to bind the Server Socket to the port!"));
-	else
-		std::cout << SUCCESS "Server Socket (fd=" << this->_serverSocket << ") bound to port <" << this->_port << ">!" << std::endl;
+	// ===== Server Address =====
+	sockaddr_in	address;
+	address.sin_family = IPv4;
+	address.sin_port = htons(_port);
+	address.sin_addr.s_addr = INADDR_ANY;
 
-	// Listening for Connections
-	if (listen(_serverSocket, LOG_LIMIT) == -1)
-		throw (std::runtime_error(ERROR "Failed to listen on Server Socket!"));
-	else
-		std::cout << SUCCESS "Server Socket (fd=" << this->_serverSocket << ") is now listeing with backlog " << LOG_LIMIT << "!" << std::endl;
+	// ===== Bind Socket =====
+	if (bind(_socket, (sockaddr *)&address, sizeof(address)) == -1)
+	{
+		close(_socket);
+		throw std::runtime_error("Failed to bind the Server Socket to the port");
+	}
+	std::cout << SUCCESS "Server bound to port " << _port << RESET << std::endl;
 
-	// Add Server Socket to the List of FDs
+	// ===== Listen Socket =====
+	if (listen(_socket, LOG_LIMIT) == -1)
+	{
+		close(_socket);
+		throw std::runtime_error("Failed to listen on Server Socket");
+	}
+	std::cout << SUCCESS "Server socket is listening with backlog " << LOG_LIMIT << RESET << std::endl;
+
+	// ===== Store Socket =====
 	pollfd	pfd;
-	pfd.fd = this->_serverSocket;
-	pfd.events = POLL_IN;
+	pfd.fd = _socket;
+	pfd.events = POLLIN;
 	pfd.revents = 0;
-	this->_fds.push_back(pfd);
+	_fds.push_back(pfd);
 
-	std::cout << INFO "IRC Server Started!\n" << INFO "Port: " << this->_port << "\n" << INFO "Password: " << this->_password << std::endl;
+	std::cout << SUCCESS "Server IRC started" RESET << '\n';
 }
 
 Server::~Server()
 {
-	for (std::map<int, Client *>::const_iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
+	// Delete clients
+	for (std::map<i32, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 		delete it->second;
 
-	// Close all the Sockets
-	for (unsigned int i = 0; i < this->_fds.size(); i++)
+	// Close FDs
+	for (u32 i = 0; i < _fds.size(); ++i)
 	{
-		if (close(this->_fds[i].fd) == -1)
-			throw (std::runtime_error(ERROR "Failed to close a Socket!"));
-		else
-			std::cout << SUCCESS "Socket (fd=" << this->_fds[i].fd << ") closed!" << std::endl;
+		if (close(_fds[i].fd) == -1)
+			throw std::runtime_error("Failed to close a socket");
+		std::cout << INFO "Socket (fd=" << _fds[i].fd << ") closed" RESET << std::endl;
 	}
 }
 
 // ========================================================================== //
-//   Methods                                                                  //
+//    Loop                                                                    //
+// ========================================================================== //
+
+void	Server::Run()
+{
+	while (gIsRunning)
+	{
+		// Wait for packets
+		if (poll(_fds.data(), _fds.size(), -1) == -1)
+		{
+			if (!gIsRunning)
+			{
+				std::cout << INFO "Closing server..." RESET << std::endl;
+				return ;
+			}
+			throw std::runtime_error("Failed to poll");
+		}
+		// Handle packets
+		for (u32 i = 0; i < _fds.size(); ++i)
+		{
+			if (_fds[i].revents & POLLIN)
+			{
+				if (_fds[i].fd == _socket)
+					acceptClient();
+				else
+					readClient(i);
+			}
+		}
+	}
+}
+
+// ========================================================================== //
+//    Methods                                                                 //
 // ========================================================================== //
 
 void	Server::acceptClient()
 {
-	// Defining Client Address
+	// ===== Client Address =====
 	sockaddr_in	clientAddress;
 	socklen_t	clientLength = sizeof(clientAddress);
 
-	// Creating the Client Socket
-	int	clientSocket = accept(this->_serverSocket, (sockaddr *)&clientAddress, &clientLength);
+	// ===== Client Socket =====
+	i32	clientSocket = accept(this->_socket, (sockaddr *)&clientAddress, &clientLength);
 	if (clientSocket == -1)
-	{
-		std::cerr << WARNING "Failed to accept a new Client Socket (fd=" << clientSocket << ")!" << std::endl;
-		return ;
-	}
+		throw std::runtime_error("Failed to accept a new Client Socket");
 
-	// Add Client Socket to the FD Vector
+	// ===== Store Socket =====
 	pollfd	pfd;
 	pfd.fd = clientSocket;
-	pfd.events = POLL_IN;
+	pfd.events = POLLIN;
 	pfd.revents = 0;
 	this->_fds.push_back(pfd);
-	
-	// Add Client to the Client Map
+
+	// ===== Store Client =====
 	Client	*client = new Client(clientSocket, inet_ntoa(clientAddress.sin_addr), ntohs(clientAddress.sin_port));
+
 	this->_clients.insert(std::make_pair(clientSocket, client));
 }
 
-void	Server::readFromClient(unsigned int index)
+void	Server::readClient(u32 index)
 {
-	char	buffer[BUFFER_LIMIT];
+	i8	buffer[BUFFER_LIMIT];
+	i32	bytesRead = recv(this->_fds[index].fd, buffer, BUFFER_LIMIT - 1, 0);
 
-	int	bytesRead = recv(this->_fds[index].fd, buffer, BUFFER_LIMIT - 1, 0);
-	// Disconnected
+	// ===== Disconnect =====
 	if (bytesRead <= 0)
 	{
-		std::cout << INFO "Client (fd=" << this->_fds[index].fd << ") disconnected!" << std::endl;
-
-		// 1. Closes socket
+		// 1. Close client socket
 		close(this->_fds[index].fd);
 
-		// 2. Deletes client object
-		const std::map<int, Client *>::iterator	it = this->_clients.find(this->_fds[index].fd);
+		// 2. Delete client object
+		const std::map<i32, Client *>::iterator	it = this->_clients.find(this->_fds[index].fd);
 		if (it != this->_clients.end())
 		{
 			delete it->second;
 			this->_clients.erase(it);
 		}
 
-		// 3. Removes from pollfd vector
+		// 3. Remove from pollfd
 		this->_fds.erase(this->_fds.begin() + index);
-
-		return ;
 	}
-	// Success
+	// ===== Receive =====
 	else
 	{
 		buffer[bytesRead] = '\0';
-		std::string	input(buffer);
 
-		commands(index, input);
-	}
-}
-
-void	Server::run()
-{
-	signal(SIGINT, signalHandler);
-
-	while (isRuning)
-	{
-		if (poll(this->_fds.data(), this->_fds.size(), -1) == -1)
-		{
-			if (errno == EINTR)
-				continue ;
-			throw (std::runtime_error(ERROR "Failed to Poll!"));
-		}
-		for (unsigned int i = 0; i < this->_fds.size(); i++)
-		{
-			if (this->_fds[i].revents & POLL_IN)
-			{
-				if (this->_fds[i].fd == this->_serverSocket)
-					acceptClient();
-				else
-					readFromClient(i);
-			}
-		}
+		const std::map<i32, Client *>::iterator	it = this->_clients.find(this->_fds[index].fd);
+		executeCommand(it->second, buffer);
 	}
 }
