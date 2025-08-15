@@ -1,81 +1,38 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   nick.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/02 11:38:38 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 14:35:56 by flmarsou         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Server.hpp"
 
-// ========================================================================== //
-//   Utils                                                                    //
-// ========================================================================== //
-
-static void	debug(const std::map<int, Client *>::const_iterator &it, const std::string &input)
+static bool	isCharCorrect(const i8 c)
 {
-	std::cout << CMD(std::string("NICK")) << "Client (fd=" << it->first << ") " << it->second->getIP() << ":" << it->second->getPort() << " => ";
-
-	if (it->second->getNickname().empty())
-		std::cout << "Changed their nickname to \"" << input << "\"!" << std::endl;
-	else
-		std::cout << "Changed their nickname from \"" << it->second->getNickname() << "\" to \"" << input << "\"!" << std::endl;
+	return (isalnum(c) || c == '-' || c == '[' || c == ']' ||
+		c == '\\' || c == '`' || c == '^' || c == '{' || c == '}');
 }
 
-static bool	checkNick(const std::string &nick)
+void	Server::nick(Client *client, const std::string &nickname)
 {
-	for (unsigned int i = 0; i < nick.size(); i++)
-	{
-		if (!isalnum(nick[i]) && nick[i] != '_')
-			return (false);
-	}
-	return (true);
-}
+	u32	nicknameSize = nickname.size();
 
-// ========================================================================== //
-//   Method                                                                   //
-// ========================================================================== //
-
-void	Server::commandNick(const std::map<int, Client *>::iterator &it, const std::string &input)
-{
-	// Checks if the input isn't empty
-	if (input.empty())
+	// First character wrong OR nickname too long
+	if (!isalpha(nickname[0]) || nickname.size() > 9)
 	{
-		const std::string	numerical = ERR_NONICKNAMEGIVEN(input);
-		send(it->first, numerical.c_str(), numerical.size(), 0);
+		client->PrintMessage(ERR_ERRONEUSNICKNAME(nickname));
 		return ;
 	}
 
-	// Checks if the input is valid
-	if (!checkNick(input))
-	{
-		const std::string	numerical = ERR_ERRONEUSNICKNAME(input);
-		send(it->first, numerical.c_str(), numerical.size(), 0);
-		return ;
-	}
-
-	// Checks if the input doesn't exist
-	for (std::map<int, Client *>::const_iterator c_it = this->_clients.begin(); c_it != this->_clients.end(); c_it++)
-	{
-		if (input == c_it->second->getNickname())
+	// Any character wrong
+	for (u32 i = 1; i < nicknameSize; ++i)
+		if (!isCharCorrect(nickname[i]))
 		{
-			const std::string	numerical = ERR_NICKNAMEINUSE(input);
-			send(it->first, numerical.c_str(), numerical.size(), 0);
+			client->PrintMessage(ERR_ERRONEUSNICKNAME(nickname));
 			return ;
 		}
-	}
 
-	// Sends confirmation message to the server
-	debug(it, input);
+	// Nickname already used
+	for (std::map<i32, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+		if (it->second->GetNickname() == nickname)
+		{
+			client->PrintMessage(ERR_NICKNAMEINUSE(nickname));
+			return ;
+		}
 
-	// Changes the client nickname
-	it->second->setNickname(input);
-
-	// Sends confirmation message to the client
-	const std::string	buffer = "Your nickname has been changed to: \"" + input + "\"!\n";
-	send(it->first, buffer.c_str(), buffer.size(), 0);
+	client->PrintMessage(NICKNAME_RAW(client->GetNickname(), nickname, client->GetUsername(), client->GetIP()));
+	client->SetNickname(nickname);
 }

@@ -1,60 +1,94 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   commands.cpp                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/28 14:04:57 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 15:00:27 by flmarsou         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Server.hpp"
 
-// ========================================================================== //
-//   Utils                                                                    //
-// ========================================================================== //
+#include <sstream>
 
-static const std::string	trimInput(std::string input)
+void	Server::executeCommand(Client *client, const i8 *buffer)
 {
-	// Removes all the starting spaces
-	for (unsigned int i = 0; input[i] == ' ';)
-		input.erase(i, 1);
+	// ===== Split buffer into lines =====
+	std::string			input(buffer);
+	std::istringstream	lineStream(input);
+	std::string			line;
 
-	// Removes all the whitespaces
-	for (unsigned int i = 0; input[i];)
+	while (std::getline(lineStream, line, '\n'))	// Split on LF
 	{
-		if (input[i] == '\n' || input[i] == '\r')
-			input.erase(i, 1);
-		else
-			i++;
-	}
+		// Strip CR
+		if (!line.empty() && line[line.size() - 1] == '\r')
+			line.erase(line.size() - 1);
 
-	return (input);
+		if (line.empty())
+			continue ;
+
+		// ===== Lexer =====
+		std::vector<std::string>	tokens;
+		std::istringstream			tokenStream(line);
+		std::string					token;
+
+		while (tokenStream >> token)
+			tokens.push_back(token);
+
+		// ===== Parser =====
+		u32	tokenSize = tokens.size();
+
+		if (tokenSize == 0)
+			return ;
+
+		if (!client->IsRegistered())
+			executeCommandNonRegistered(client, tokens, tokenSize);
+		else
+			executeCommandRegistered(client, tokens, tokenSize);
+	}
 }
 
-// ========================================================================== //
-//   Method                                                                   //
-// ========================================================================== //
-
-void	Server::commands(int index, std::string &input)
+void	Server::executeCommandNonRegistered(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {
-	const std::map<int, Client *>::iterator	it = this->_clients.find(this->_fds[index].fd);
+	if (tokens[0] == "CAP")
+		return ;
 
-	if (!it->second->getPassword())
+	if (tokenSize == 1)
 	{
-		if (input.substr(0, 5) == "PASS ")
-			commandPass(it, trimInput(input.substr(5)));
+		if (tokens[0] == "PASS" || tokens[0] == "USER")
+			client->PrintMessage(ERR_NEEDMOREPARAMS(tokens[0]));
+		else if (tokens[0] == "NICK")
+			client->PrintMessage(ERR_NONICKNAMEGIVEN);
 		else
-			send(it->first, ERR_NOTREGISTERED, std::strlen(ERR_NOTREGISTERED), 0);
+			client->PrintMessage(ERR_NOTREGISTERED);
 		return ;
 	}
 
-	if (input.substr(0, 5) == "NICK ")
-		commandNick(it, trimInput(input.substr(5)));
-	else if (input.substr(0, 5) == "USER ")
-		commandUser(it, trimInput(input.substr(5)));
-	else if (input.substr(0, 5) == "PASS ")
-		commandPass(it, trimInput(input.substr(5)));
+	if (tokens[0] == "PASS")
+		pass(client, tokens[1]);
+	else if (tokens[0] == "NICK")
+		nick(client, tokens[1]);
+	else if (tokens[0] == "USER")
+	{
+		if (tokenSize < 5)
+		{
+			client->PrintMessage(ERR_NEEDMOREPARAMS(tokens[0]));
+			return ;
+		}
+		user(client, tokens);
+	}
+	else
+		client->PrintMessage(ERR_NOTREGISTERED);
+
+	if (client->IsRegistered())
+		client->PrintWelcome();
+}
+
+void	Server::executeCommandRegistered(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
+{
+	if (tokens[0] == "PASS" || tokens[0] == "USER")
+		client->PrintMessage(ERR_ALREADYREGISTRED);
+	else if (tokenSize == 1)
+	{
+		if (tokens[0] == "NICK")
+			client->PrintMessage(ERR_NONICKNAMEGIVEN);
+		else
+			client->PrintMessage(ERR_NEEDMOREPARAMS(tokens[0]));
+		return ;
+	}
+	else if (tokens[0] != "PRIVMSG" && tokens[0] != "JOIN" && tokens[0] != "TOPIC" && tokens[0] != "KICK" && tokens[0] != "NICK")
+		client->PrintMessage(ERR_UNKNOWNCOMMAND(tokens[0]));
+	else if (tokens[0] == "NICK")
+		nick(client, tokens[1]);
 }
