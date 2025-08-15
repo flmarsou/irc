@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/05/26 09:43:40 by flmarsou          #+#    #+#              #
-#    Updated: 2025/06/03 14:58:55 by flmarsou         ###   ########.fr        #
+#    Created: 2025/08/14 09:25:28 by flmarsou          #+#    #+#              #
+#    Updated: 2025/08/14 16:48:57 by flmarsou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,17 +18,17 @@ VPATH		:=	src : src/commands
 
 SRC			:=	main.cpp \
 				Server.cpp \
-				Client.cpp \
 				commands.cpp \
 				pass.cpp \
 				nick.cpp \
 				user.cpp \
+				Client.cpp \
 
 OBJ			:=	${addprefix obj/,${notdir $(SRC:.cpp=.o)}}
 
 # Variables
 CC			:=	c++
-CFLAGS		:=	-Wall -Wextra -std=c++98 -Iincludes -Isrc # Add -Werror
+CFLAGS		:=	-Wall -Werror -Wextra -O2 -std=c++98 -Iincludes -Isrc # Add -Werror
 
 # Makefile
 all			:	${EXE}
