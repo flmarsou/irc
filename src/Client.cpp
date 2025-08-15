@@ -1,52 +1,66 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/28 10:57:01 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 14:38:00 by flmarsou         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "Client.hpp"
+# include "Client.hpp"
 
 // ========================================================================== //
-//   Constructors                                                             //
+//    Setup                                                                   //
 // ========================================================================== //
 
-Client::Client(const int fd, const char *ip, const unsigned short port)
-	:	_fd(fd), _ip(ip), _port(port), _hasPassword(false), _nickname(""), _username(""), _realname("")
+Client::Client(const i32 fd, const i8 *ip, const u16 port)
+	:	_fd(fd)
+	,	_ip(ip)
+	,	_port(port)
+	,	_password(false)
+	,	_nickname("")
+	,	_username("")
 {
-	std::cout << SUCCESS "!" << std::endl;
-	std::cout << INFO "New client (fd=" << this->_fd << ") " << this->_ip << ":" << this->_port << " connected!" << std::endl;
+	std::cout << "\n" INFO "New client has joined: \n" RESET;
+	std::cout << " - FD: " << _fd << '\n';
+	std::cout << " - IP: " << _ip << '\n';
+	std::cout << " - Port: " << _port << '\n';
+	std::cout << std::endl;
 }
 
 Client::~Client()
 {
-	if (this->_nickname.empty())
-		std::cout << INFO "Client (fd=" << this->_fd << ") deleted!" << std::endl;
+	if (_nickname.empty())
+		std::cout << INFO "Client (fd=" << _fd << ") left!" << std::endl;
 	else
-		std::cout << INFO "Client " << this->_nickname << " (fd=" << this->_fd << ") deleted!" << std::endl;
+		std::cout << INFO "Client " << _nickname << " (fd=" << _fd << ") left!" << std::endl;
 }
 
 // ========================================================================== //
-//   Setters & Getters                                                        //
+//    Getters & Setters                                                       //
 // ========================================================================== //
 
-int					Client::getFD() const								{ return (this->_fd); }
-const char			*Client::getIP() const								{ return (this->_ip); }
-unsigned short		Client::getPort() const								{ return (this->_port); }
+i32			Client::GetFD() const { return (_fd); }
+const i8	*Client::GetIP() const { return (_ip); }
+u16			Client::GetPort() const { return (_port); }
 
-void				Client::setPassword(const bool hasPassword)			{ this->_hasPassword = hasPassword; }
-bool				Client::getPassword() const							{ return (this->_hasPassword); }
+bool		Client::GetPassword() const { return (_password); }
+void		Client::SetPassword(const bool password) { _password = password; }
 
-void				Client::setNickname(const std::string &nickname)	{ this->_nickname = nickname; }
-const std::string	&Client::getNickname() const						{ return (this->_nickname); }
+std::string	Client::GetNickname() const { return (_nickname); }
+void		Client::SetNickname(const std::string &nickname) { _nickname = nickname; }
 
-void				Client::setUsername(const std::string &username)	{ this->_username = username; }
-const std::string	&Client::getUsername() const						{ return (this->_username); }
+std::string	Client::GetUsername() const { return (_username); }
+void		Client::SetUsername(const std::string &username) { _username = username; }
 
-void				Client::setRealname(const std::string &realname)	{ this->_realname = realname; }
-const std::string	&Client::getRealname() const						{ return (this->_realname); }
+// ========================================================================== //
+//    Methods                                                                 //
+// ========================================================================== //
+
+void	Client::PrintMessage(const std::string &message) const
+{
+	send(_fd, message.c_str(), message.size(), 0);
+}
+
+void	Client::PrintWelcome() const
+{
+	const std::string	buffer = "Welcome to the IRC server, " + _nickname + "\n";
+
+	send(_fd, buffer.c_str(), buffer.size(), 0);
+}
+
+bool	Client::IsRegistered() const
+{
+	return (_password && !_nickname.empty() && !_username.empty());
+}

@@ -1,48 +1,44 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Client.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: flmarsou <flmarsou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/28 10:52:03 by flmarsou          #+#    #+#             */
-/*   Updated: 2025/06/03 14:37:00 by flmarsou         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #pragma once
 
-# include "irc.hpp"
+# include "config.hpp"
 
 class	Client
 {
 	public:
-		Client(const int fd, const char *ip, const unsigned short port);
+		// ===== Setup =====
+
+		Client(const i32 fd, const i8 *ip, const u16 port);
 		~Client();
 
-		int					getFD() const;
-		const char			*getIP() const;
-		unsigned short		getPort() const;
+		// ===== Getters & Setters =====
 
-		void				setPassword(const bool hasPassword);
-		bool				getPassword() const;
+		i32			GetFD() const;
+		const i8	*GetIP() const;
+		u16			GetPort() const;
 
-		void				setNickname(const std::string &nickname);
-		const std::string	&getNickname() const;
+		bool		GetPassword() const;
+		void		SetPassword(const bool password);
 
-		void				setUsername(const std::string &username);
-		const std::string	&getUsername() const;
+		std::string	GetNickname() const;
+		void		SetNickname(const std::string &nickname);
 
-		void				setRealname(const std::string &realname);
-		const std::string	&getRealname() const;
+		std::string	GetUsername() const;
+		void		SetUsername(const std::string &username);
+
+		// ===== Methods =====
+
+		void		PrintMessage(const std::string &message) const;
+		void		PrintWelcome() const;
+		bool		IsRegistered() const;
 
 	private:
-		const int		_fd;
-		const char		*_ip;
-		unsigned short	_port;
-		bool			_hasPassword;
-		std::string		_nickname;
-		std::string		_username;
-		std::string		_realname;
+		// ===== Data =====
 
+		const i32	_fd;
+		const i8	*_ip;
+		const u16	_port;
+
+		bool		_password;
+		std::string	_nickname;
+		std::string	_username;
 };
