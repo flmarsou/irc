@@ -1,0 +1,70 @@
+#include "Channel.hpp"
+
+// ========================================================================== //
+//    Setup                                                                   //
+// ========================================================================== //
+
+Channel::Channel(Client &creator, const std::string &name)
+	:	_name(name)
+{
+	std::cout << INFO "Channel " << _name << " created by " << creator.GetNickname() << RESET << std::endl;
+
+	_members[creator.GetFD()] = &creator;
+	_operators.insert(creator.GetFD());
+
+	_modes[INVITE_MODE] = false;
+	_modes[TOPIC_MODE] = false;
+	_modes[KEY_MODE] = false;
+	_modes[OPERATOR_MODE] = false;
+	_modes[LIMIT_MODE] = false;
+}
+
+Channel::Channel(Client &creator, const std::string &name, const std::string &key)
+	:	_name(name)
+	,	_key(key)
+{
+	std::cout << INFO "Channel " << _name << " created by " << creator.GetNickname() << RESET << std::endl;
+
+	_members[creator.GetFD()] = &creator;
+	_operators.insert(creator.GetFD());
+
+	_modes[INVITE_MODE] = false;
+	_modes[TOPIC_MODE] = false;
+	_modes[KEY_MODE] = false;
+	_modes[OPERATOR_MODE] = false;
+	_modes[LIMIT_MODE] = false;
+}
+
+Channel::~Channel()
+{
+	std::cout << INFO "Channel " << _name << " destroyed" RESET << std::endl;
+}
+
+// ========================================================================== //
+//    Getters & Setters                                                       //
+// ========================================================================== //
+
+const std::string	Channel::GetName() const { return (_name); }
+
+const std::string	Channel::GetKey() const { return (_key); }
+void				Channel::SetKey(const std::string &key) { _key = key; }
+
+const std::string	Channel::GetTopic() const { return (_topic); }
+void				Channel::SetTopic(const std::string &topic) { _topic = topic; }
+
+const bool	Channel::GetMode(const Modes mode) const { return (_modes[mode]); }
+void		Channel::SetMode(const Modes mode, const bool set) { _modes[mode] = set; }
+
+// ========================================================================== //
+//    Methods                                                                 //
+// ========================================================================== //
+
+const bool	Channel::IsMember(const Client &client) const
+{
+	return (_members.find(client.GetFD()) != _members.end());
+}
+
+const bool	Channel::IsOperator(const Client &client) const
+{
+	return (_operators.find(client.GetFD()) != _operators.end());
+}
