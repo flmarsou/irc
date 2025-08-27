@@ -1,7 +1,7 @@
 #pragma once
 
 // --- 8 bits / 1 byte Variables ---
-# define I8MIN	-128
+# define I8MIN	(-128)
 # define I8MAX	127
 # define U8MIN	0U
 # define U8MAX	255U
