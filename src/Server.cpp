@@ -64,6 +64,10 @@ Server::~Server()
 	for (std::map<i32, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 		delete it->second;
 
+	// Delete channels
+	for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+		delete it->second;
+
 	// Close FDs
 	for (u32 i = 0; i < _fds.size(); ++i)
 	{
