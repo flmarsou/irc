@@ -18,8 +18,8 @@ class	Channel
 	public:
 		// ===== Setup =====
 
-		Channel(Client &creator, const std::string &name);
-		Channel(Client &creator, const std::string &name, const std::string &key);
+		Channel(const Client &creator, const std::string &name);
+		Channel(const Client &creator, const std::string &name, const std::string &key);
 		~Channel();
 
 		// ===== Getters & Setters =====
@@ -38,13 +38,13 @@ class	Channel
 		// ===== Methods =====
 
 		bool	IsMember(const Client &client) const;
-		bool	IsOperator(const Client &client) const;
+
+		void	AddMember(const Client &client);
 
 	private:
 		// ===== Data =====
 
-		std::map<i32, Client *>	_members;
-		std::set<i32>			_operators;
+		std::map<i32, const Client *>	_members;
 
 		const std::string		_name;
 		std::string				_key;

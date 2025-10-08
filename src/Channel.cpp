@@ -4,13 +4,12 @@
 //    Setup                                                                   //
 // ========================================================================== //
 
-Channel::Channel(Client &creator, const std::string &name)
+Channel::Channel(const Client &creator, const std::string &name)
 	:	_name(name)
 {
 	std::cout << INFO "Channel " << _name << " created by " << creator.GetNickname() << RESET << std::endl;
 
-	_members[creator.GetFD()] = &creator;
-	_operators.insert(creator.GetFD());
+	_members.insert(std::make_pair(creator.GetFD(), &creator));
 
 	_modes[INVITE_MODE] = false;
 	_modes[TOPIC_MODE] = false;
@@ -19,14 +18,13 @@ Channel::Channel(Client &creator, const std::string &name)
 	_modes[LIMIT_MODE] = false;
 }
 
-Channel::Channel(Client &creator, const std::string &name, const std::string &key)
+Channel::Channel(const Client &creator, const std::string &name, const std::string &key)
 	:	_name(name)
 	,	_key(key)
 {
 	std::cout << INFO "Channel " << _name << " created by " << creator.GetNickname() << RESET << std::endl;
 
-	_members[creator.GetFD()] = &creator;
-	_operators.insert(creator.GetFD());
+	_members.insert(std::make_pair(creator.GetFD(), &creator));
 
 	_modes[INVITE_MODE] = false;
 	_modes[TOPIC_MODE] = false;
@@ -64,7 +62,8 @@ bool	Channel::IsMember(const Client &client) const
 	return (_members.find(client.GetFD()) != _members.end());
 }
 
-bool	Channel::IsOperator(const Client &client) const
+void	Channel::AddMember(const Client &client)
 {
-	return (_operators.find(client.GetFD()) != _operators.end());
+	if (!IsMember(client))
+		_members.insert(std::make_pair(client.GetFD(), &client));
 }
