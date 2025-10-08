@@ -10,6 +10,8 @@ SRC			:=	main.cpp \
 				pass.cpp \
 				nick.cpp \
 				user.cpp \
+				privmsg.cpp \
+				join.cpp \
 				Client.cpp \
 				Channel.cpp \
 

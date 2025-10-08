@@ -47,4 +47,6 @@ class	Server
 		void	pass(Client *client, const std::string &password);
 		void	nick(Client *client, const std::string &nickname);
 		void	user(Client *client, const std::vector<std::string> &tokens);
+		void	privmsg(Client *client, const std::vector<std::string> &tokens);
+		void	join(const Client *client, const std::vector<std::string> &tokens);
 };
