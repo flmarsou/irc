@@ -19,25 +19,18 @@ static void	checkPort(const i8 *str, u16 &port)
 	port = nbr;
 }
 
-static void	checkArgc(const i32 argc, const i8 **argv)
-{
-	if (argc != 3)
-		throw std::runtime_error("./ircserv <port> <password>");
-
-	if (!argv[1][0])
-		throw std::runtime_error("Missing port");
-
-	if (!argv[2][0])
-		throw std::runtime_error("Missing password");
-}
-
 i32	main(const i32 argc, const i8 **argv)
 {
 	u16	serverPort;
 
+	if (argc != 3)
+	{
+		std::cout << ERROR "./ircserv <port> <password>" RESET << std::endl;
+		return (1);
+	}
+
 	try
 	{
-		checkArgc(argc, argv);
 		checkPort(argv[1], serverPort);
 
 		Server	server(serverPort, std::string(argv[2]));

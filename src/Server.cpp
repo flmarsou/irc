@@ -116,7 +116,7 @@ void	Server::acceptClient()
 	socklen_t	clientLength = sizeof(clientAddress);
 
 	// ===== Client Socket =====
-	i32	clientSocket = accept(this->_socket, (sockaddr *)&clientAddress, &clientLength);
+	i32	clientSocket = accept(_socket, (sockaddr *)&clientAddress, &clientLength);
 	if (clientSocket == -1)
 		throw std::runtime_error("Failed to accept a new Client Socket");
 
@@ -125,42 +125,42 @@ void	Server::acceptClient()
 	pfd.fd = clientSocket;
 	pfd.events = POLLIN;
 	pfd.revents = 0;
-	this->_fds.push_back(pfd);
+	_fds.push_back(pfd);
 
 	// ===== Store Client =====
 	Client	*client = new Client(clientSocket, inet_ntoa(clientAddress.sin_addr), ntohs(clientAddress.sin_port));
 
-	this->_clients.insert(std::make_pair(clientSocket, client));
+	_clients.insert(std::make_pair(clientSocket, client));
 }
 
 void	Server::readClient(u32 index)
 {
 	i8	buffer[BUFFER_LIMIT];
-	i32	bytesRead = recv(this->_fds[index].fd, buffer, BUFFER_LIMIT - 1, 0);
+	i32	bytesRead = recv(_fds[index].fd, buffer, BUFFER_LIMIT - 1, 0);
 
 	// ===== Disconnect =====
 	if (bytesRead <= 0)
 	{
 		// 1. Close client socket
-		close(this->_fds[index].fd);
+		close(_fds[index].fd);
 
 		// 2. Delete client object
-		const std::map<i32, Client *>::iterator	it = this->_clients.find(this->_fds[index].fd);
-		if (it != this->_clients.end())
+		const std::map<i32, Client *>::iterator	it = _clients.find(_fds[index].fd);
+		if (it != _clients.end())
 		{
 			delete it->second;
-			this->_clients.erase(it);
+			_clients.erase(it);
 		}
 
 		// 3. Remove from pollfd
-		this->_fds.erase(this->_fds.begin() + index);
+		_fds.erase(_fds.begin() + index);
 	}
 	// ===== Receive =====
 	else
 	{
 		buffer[bytesRead] = '\0';
 
-		const std::map<i32, Client *>::iterator	it = this->_clients.find(this->_fds[index].fd);
+		const std::map<i32, Client *>::iterator	it = _clients.find(_fds[index].fd);
 		executeCommand(it->second, buffer);
 	}
 }

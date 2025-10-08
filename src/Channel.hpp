@@ -32,13 +32,13 @@ class	Channel
 		const std::string	GetTopic() const;
 		void				SetTopic(const std::string &topic);
 
-		const bool			GetMode(const Modes mode) const;
+		bool				GetMode(const Modes mode) const;
 		void				SetMode(const Modes mode, const bool set);
 
 		// ===== Methods =====
 
-		const bool			IsMember(const Client &client) const;
-		const bool			IsOperator(const Client &client) const;
+		bool	IsMember(const Client &client) const;
+		bool	IsOperator(const Client &client) const;
 
 	private:
 		// ===== Data =====

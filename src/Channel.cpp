@@ -52,19 +52,19 @@ void				Channel::SetKey(const std::string &key) { _key = key; }
 const std::string	Channel::GetTopic() const { return (_topic); }
 void				Channel::SetTopic(const std::string &topic) { _topic = topic; }
 
-const bool	Channel::GetMode(const Modes mode) const { return (_modes[mode]); }
+bool		Channel::GetMode(const Modes mode) const { return (_modes[mode]); }
 void		Channel::SetMode(const Modes mode, const bool set) { _modes[mode] = set; }
 
 // ========================================================================== //
 //    Methods                                                                 //
 // ========================================================================== //
 
-const bool	Channel::IsMember(const Client &client) const
+bool	Channel::IsMember(const Client &client) const
 {
 	return (_members.find(client.GetFD()) != _members.end());
 }
 
-const bool	Channel::IsOperator(const Client &client) const
+bool	Channel::IsOperator(const Client &client) const
 {
 	return (_operators.find(client.GetFD()) != _operators.end());
 }
