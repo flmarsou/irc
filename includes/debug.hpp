@@ -30,7 +30,6 @@
 # define ERR_ERRONEUSNICKNAME(nickname)	"432 " + nickname + " :Erroneus nickname\r\n"
 # define ERR_NICKNAMEINUSE(nickname)	"433 " + nickname + " :Nickname is already in use\r\n"
 
-// Special ping for IRC clients
 # define NICKNAME_RAW(oldNick, newNick, username, hostname)	":" + oldNick + "!" + username + "@" + hostname + " NICK :" + newNick + "\r\n"
 
 // ========================================================================== //
@@ -38,3 +37,11 @@
 // ========================================================================== //
 
 # define ERR_BADCHANMASK(channel)	"476 " + channel + " :Bad Channel Mask\r\n"
+
+# define JOIN_RAW(nickname, username, hostname, channelName)	":" + nickname + "!~" + username + "@" + hostname + " JOIN :" + channelName + "\r\n"
+
+// ========================================================================== //
+//     PRIVMSG                                                                //
+// ========================================================================== //
+
+# define PRIVMSG_RAW(sender, hostname, receiver, message) ":" + sender + "!~" + sender + "@" + hostname + " PRIVMSG " + receiver + " :" + message + "\r\n"
