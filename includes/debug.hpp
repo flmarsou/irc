@@ -49,11 +49,14 @@
 # define RAW_NICKNAME(oldNick, newNick, username, hostname)	\
 	":" + oldNick + "!" + username + "@" + hostname + " NICK :" + newNick + "\r\n"
 
-# define RAW_JOIN(nickname, username, hostname, channelName) \
-	":" + nickname + "!~" + username + "@" + hostname + " JOIN :" + channelName + "\r\n"
+# define RAW_JOIN(nickname, username, hostname, channel) \
+	":" + nickname + "!~" + username + "@" + hostname + " JOIN :" + channel + "\r\n"
 
 # define RAW_PRIVMSG(sender, hostname, receiver, message) \
 	":" + sender + "!~" + sender + "@" + hostname + " PRIVMSG " + receiver + " :" + message + "\r\n"
 
-# define RAW_BROADCAST(sender, username, hostname, channelName, message) \
-	":" + sender + "!~" + username + "@" + hostname + " PRIVMSG " + channelName + " :" + message + "\r\n"
+# define RAW_BROADCAST(sender, username, hostname, channel, message) \
+	":" + sender + "!~" + username + "@" + hostname + " PRIVMSG " + channel + " :" + message + "\r\n"
+
+# define RAW_PART(nickname, username, hostname, channel, reason) \
+	":" + nickname + "!~" + username + "@" + hostname + " PART " + channel + " :" + reason + "\r\n"
