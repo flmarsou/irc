@@ -40,6 +40,9 @@ class	Channel
 		bool	IsMember(const Client &client) const;
 
 		void	AddMember(const Client &client);
+		void	RemoveMember(const Client &client);
+
+		void	Broadcast(const Client &sender, const std::string &message);
 
 	private:
 		// ===== Data =====

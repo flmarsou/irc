@@ -9,7 +9,7 @@ Channel::Channel(const Client &creator, const std::string &name)
 {
 	std::cout << INFO "Channel " << _name << " created by " << creator.GetNickname() << RESET << std::endl;
 
-	_members.insert(std::make_pair(creator.GetFD(), &creator));
+	AddMember(creator);
 
 	_modes[INVITE_MODE] = false;
 	_modes[TOPIC_MODE] = false;
@@ -24,7 +24,7 @@ Channel::Channel(const Client &creator, const std::string &name, const std::stri
 {
 	std::cout << INFO "Channel " << _name << " created by " << creator.GetNickname() << RESET << std::endl;
 
-	_members.insert(std::make_pair(creator.GetFD(), &creator));
+	AddMember(creator);
 
 	_modes[INVITE_MODE] = false;
 	_modes[TOPIC_MODE] = false;
@@ -64,6 +64,39 @@ bool	Channel::IsMember(const Client &client) const
 
 void	Channel::AddMember(const Client &client)
 {
-	if (!IsMember(client))
-		_members.insert(std::make_pair(client.GetFD(), &client));
+	if (IsMember(client))
+		return ;
+
+	_members.insert(std::make_pair(client.GetFD(), &client));
+
+	// Send join message to everyone
+	for (std::map<i32, const Client *>::iterator it = _members.begin(); it != _members.end(); ++it)
+		it->second->PrintMessage(RAW_JOIN(client.GetNickname(), client.GetUsername(), client.GetIP(), _name));
+
+	std::string	nicknameList;
+	for (std::map<i32, const Client *>::const_iterator it = _members.begin(); it != _members.end(); ++it)
+	{
+		if (!nicknameList.empty())
+			nicknameList += " ";
+		nicknameList += it->second->GetNickname();
+	}
+
+	// Refresh members list
+	client.PrintMessage(RPL_NAMREPLY("ft_irc.serv", client.GetNickname(), _name, nicknameList));
+	client.PrintMessage(RPL_ENDOFNAMES("ft_irc.serv", client.GetNickname(), _name));
+}
+
+void	Channel::RemoveMember(const Client &client)
+{
+	(void)client;
+}
+
+void	Channel::Broadcast(const Client &sender, const std::string &message)
+{
+	for (std::map<i32, const Client *>::iterator it = _members.begin(); it != _members.end(); ++it)
+	{
+		if (it->second->GetFD() == sender.GetFD())
+			continue ;
+		it->second->PrintMessage(RAW_BROADCAST(sender.GetNickname(), sender.GetUsername(), sender.GetIP(), _name, message));
+	}
 }
