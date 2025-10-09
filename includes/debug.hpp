@@ -30,18 +30,30 @@
 # define ERR_ERRONEUSNICKNAME(nickname)	"432 " + nickname + " :Erroneus nickname\r\n"
 # define ERR_NICKNAMEINUSE(nickname)	"433 " + nickname + " :Nickname is already in use\r\n"
 
-# define NICKNAME_RAW(oldNick, newNick, username, hostname)	":" + oldNick + "!" + username + "@" + hostname + " NICK :" + newNick + "\r\n"
-
 // ========================================================================== //
 //     JOIN                                                                   //
 // ========================================================================== //
 
 # define ERR_BADCHANMASK(channel)	"476 " + channel + " :Bad Channel Mask\r\n"
 
-# define JOIN_RAW(nickname, username, hostname, channelName)	":" + nickname + "!~" + username + "@" + hostname + " JOIN :" + channelName + "\r\n"
+# define RPL_NAMREPLY(server, target, channel, names) \
+	(std::string(":") + server + " 353 " + target + " = " + channel + " :" + names + "\r\n")
+
+# define RPL_ENDOFNAMES(server, target, channel) \
+	(std::string(":") + server + " 366 " + target + " " + channel + " :End of /NAMES list.\r\n")
 
 // ========================================================================== //
-//     PRIVMSG                                                                //
+//     RAW MESSAGES                                                           //
 // ========================================================================== //
 
-# define PRIVMSG_RAW(sender, hostname, receiver, message) ":" + sender + "!~" + sender + "@" + hostname + " PRIVMSG " + receiver + " :" + message + "\r\n"
+# define RAW_NICKNAME(oldNick, newNick, username, hostname)	\
+	":" + oldNick + "!" + username + "@" + hostname + " NICK :" + newNick + "\r\n"
+
+# define RAW_JOIN(nickname, username, hostname, channelName) \
+	":" + nickname + "!~" + username + "@" + hostname + " JOIN :" + channelName + "\r\n"
+
+# define RAW_PRIVMSG(sender, hostname, receiver, message) \
+	":" + sender + "!~" + sender + "@" + hostname + " PRIVMSG " + receiver + " :" + message + "\r\n"
+
+# define RAW_BROADCAST(sender, username, hostname, channelName, message) \
+	":" + sender + "!~" + username + "@" + hostname + " PRIVMSG " + channelName + " :" + message + "\r\n"
