@@ -12,6 +12,7 @@ SRC			:=	main.cpp \
 				user.cpp \
 				privmsg.cpp \
 				join.cpp \
+				part.cpp \
 				Client.cpp \
 				Channel.cpp \
 
@@ -19,7 +20,7 @@ OBJ			:=	${addprefix obj/,${notdir $(SRC:.cpp=.o)}}
 
 # Variables
 CC			:=	c++
-CFLAGS		:=	-Wall -Werror -Wextra -O2 -std=c++98 -Iincludes -Isrc # Add -Werror
+CFLAGS		:=	-Wall -Werror -Wextra -O2 -std=c++98 -Iincludes -Isrc
 
 # Makefile
 all			:	${EXE}

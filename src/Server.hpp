@@ -49,4 +49,5 @@ class	Server
 		void	user(Client *client, const std::vector<std::string> &tokens);
 		void	privmsg(Client *client, const std::vector<std::string> &tokens);
 		void	join(const Client *client, const std::vector<std::string> &tokens);
+		void	part(Client *client, const std::string &channelName, const std::string &command);
 };

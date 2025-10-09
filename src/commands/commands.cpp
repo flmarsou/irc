@@ -103,4 +103,6 @@ void	Server::executeCommandRegistered(Client *client, const std::vector<std::str
 	}
 	else if (tokens[0] == "JOIN")
 		join(client, tokens);
+	else if (tokens[0] == "PART")
+		part(client, tokens[1], tokens[2]);
 }
