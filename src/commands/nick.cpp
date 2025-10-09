@@ -33,6 +33,6 @@ void	Server::nick(Client *client, const std::string &nickname)
 			return ;
 		}
 
-	client->PrintMessage(NICKNAME_RAW(client->GetNickname(), nickname, client->GetUsername(), client->GetIP()));
+	client->PrintMessage(RAW_NICKNAME(client->GetNickname(), nickname, client->GetUsername(), client->GetIP()));
 	client->SetNickname(nickname);
 }
