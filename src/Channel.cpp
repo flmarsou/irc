@@ -88,7 +88,15 @@ void	Channel::AddMember(const Client &client)
 
 void	Channel::RemoveMember(const Client &client)
 {
-	(void)client;
+	if (!IsMember(client))
+		return ;
+
+	std::map<i32, const Client *>::iterator	it = _members.find(client.GetFD());
+
+	for (std::map<i32, const Client *>::iterator it = _members.begin(); it != _members.end(); ++it)
+		it->second->PrintMessage(RAW_PART(client.GetNickname(), client.GetUsername(), client.GetIP(), _name, "Leaving"));
+
+	_members.erase(it);
 }
 
 void	Channel::Broadcast(const Client &sender, const std::string &message)
