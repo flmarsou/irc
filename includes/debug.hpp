@@ -43,6 +43,17 @@
 	(std::string(":") + server + " 366 " + target + " " + channel + " :End of /NAMES list.\r\n")
 
 // ========================================================================== //
+//     MODE                                                                   //
+// ========================================================================== //
+
+# define ERR_NOSUCHCHANNEL(channel)		"403 " + channel + " :No such channel\r\n"
+
+# define ERR_NOSUCHNICK(nickname)		"401 " + nickname + " :No such nick/channel\r\n"
+
+# define ERR_UNKNOWNMODE(arg, channel)	("472 " + std::string(1, arg) + " :is unknown mode char to me for " + channel + "\r\n")
+
+
+// ========================================================================== //
 //     RAW MESSAGES                                                           //
 // ========================================================================== //
 
@@ -60,3 +71,9 @@
 
 # define RAW_PART(nickname, username, hostname, channel, reason) \
 	":" + nickname + "!~" + username + "@" + hostname + " PART " + channel + " :" + reason + "\r\n"
+
+#define RAW_MODE_ADDOP(sender, username, hostname, channel, target) \
+    (":" + sender + "!~" + username + "@" + hostname + " MODE " + channel + " +o " + target + "\r\n")
+
+#define RAW_MODE_REMOP(sender, username, hostname, channel, target) \
+    (":" + sender + "!~" + username + "@" + hostname + " MODE " + channel + " -o " + target + "\r\n")
