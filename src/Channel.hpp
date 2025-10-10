@@ -4,22 +4,13 @@
 
 # include "Client.hpp"
 
-enum	Modes
-{
-	INVITE_MODE,
-	TOPIC_MODE,
-	KEY_MODE,
-	OPERATOR_MODE,
-	LIMIT_MODE
-};
-
 class	Channel
 {
 	public:
 		// ===== Setup =====
 
-		Channel(const Client &creator, const std::string &name);
-		Channel(const Client &creator, const std::string &name, const std::string &key);
+		Channel(const Client *creator, const std::string &name);
+		Channel(const Client *creator, const std::string &name, const std::string &key);
 		~Channel();
 
 		// ===== Getters & Setters =====
@@ -32,34 +23,22 @@ class	Channel
 		const std::string	GetTopic() const;
 		void				SetTopic(const std::string &topic);
 
-		const i32			GetLimit() const;
-		void				SetLimit(const i32 limit);
-
-		bool				GetMode(const Modes mode) const;
-		void				SetMode(const Modes mode, const bool set);
-
 		// ===== Methods =====
 
-		bool	IsMember(const Client &client) const;
+		void	AddMember(const Client *client);
+		void	RemoveMember(const Client *client);
+		bool	IsMember(const std::string &nickname);
 
-		void	AddMember(const Client &client);
-		void	RemoveMember(const Client &client);
-
-		void	AddOperator(const Client &receiver, const Client &sender);
-		void	RemoveOperator(const Client &receiver, const Client &sender);
-
-		void	Broadcast(const Client &sender, const std::string &message);
+		void	Broadcast(const std::string &message, const std::string &caster, const bool selfSend) const;
 
 	private:
 		// ===== Data =====
 
-		std::map<i32, const Client *>	_members;
-		std::vector<std::string>		_operators;
+		std::vector<const Client *>	_members;
+		std::vector<std::string>	_operators;
 
 		const std::string		_name;
 		std::string				_key;
 		std::string				_topic;
 		i32						_limit;
-
-		bool					_modes[5];
 };

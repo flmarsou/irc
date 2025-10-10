@@ -1,26 +1,33 @@
 #include "Server.hpp"
 
-void	Server::join(const Client *client, const std::vector<std::string> &tokens)
+void	Server::join(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {
+	if (tokenSize <= 1)
+	{
+		client->SendMessage(ERR_NEEDMOREPARAMS(tokens[0]));
+		return ;
+	}
+
+	// First character wrong
 	if (tokens[1][0] != '#')
 	{
-		client->PrintMessage(ERR_BADCHANMASK(tokens[1]));
+		client->SendMessage(ERR_BADCHANMASK(tokens[1]));
 		return ;
 	}
 
 	// Try to find an existing channel
-	for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+	for (u32 i = 0; i < _channels.size(); ++i)
 	{
-		if (it->second->GetName() == tokens[1])
+		if (_channels[i]->GetName() == tokens[1])
 		{
-			it->second->AddMember(*client);
+			_channels[i]->AddMember(client);
 			return ;
 		}
 	}
 
 	// Create channel
 	Channel	*channel = (tokens.size() == 3)
-		? new Channel(*client, tokens[1], tokens[2])
-		: new Channel(*client, tokens[1]);
-	_channels.insert(std::make_pair(channel->GetName(), channel));
+		? new Channel(client, tokens[1], tokens[2])
+		: new Channel(client, tokens[1]);
+	_channels.push_back(channel);
 }

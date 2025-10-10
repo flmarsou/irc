@@ -31,9 +31,9 @@ class	Server
 
 		// ===== Data =====
 
-		std::vector<pollfd>					_fds;
-		std::map<i32, Client *>				_clients;
-		std::map<std::string, Channel *>	_channels;
+		std::vector<pollfd>		_fds;
+		std::vector<Client *>	_clients;
+		std::vector<Channel *>	_channels;
 
 		// ===== Methods =====
 
@@ -44,10 +44,8 @@ class	Server
 		void	executeCommandNonRegistered(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
 		void	executeCommandRegistered(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
 
-		void	pass(Client *client, const std::string &password);
-		void	nick(Client *client, const std::string &nickname);
-		void	user(Client *client, const std::vector<std::string> &tokens);
-		void	privmsg(Client *client, const std::vector<std::string> &tokens);
-		void	join(const Client *client, const std::vector<std::string> &tokens);
-		void	part(Client *client, const std::string &channelName, const std::string &command);
+		void	pass(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
+		void	nick(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
+		void	user(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
+		void	join(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
 };

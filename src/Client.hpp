@@ -27,8 +27,8 @@ class	Client
 
 		// ===== Methods =====
 
-		void		PrintMessage(const std::string &message) const;
-		void		PrintWelcome() const;
+		void		SendMessage(const std::string &message) const;
+		void		SendWelcome() const;
 		bool		IsRegistered() const;
 
 	private:

@@ -61,12 +61,14 @@ Server::Server(const u16 serverPort, const std::string &password)
 Server::~Server()
 {
 	// Delete clients
-	for (std::map<i32, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-		delete it->second;
+	for (u32 i = 0; i < _clients.size(); ++i)
+		delete _clients[i];
+	_clients.clear();
 
 	// Delete channels
-	for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-		delete it->second;
+	for (u32 i = 0; i < _channels.size(); ++i)
+		delete _channels[i];
+	_channels.clear();
 
 	// Close FDs
 	for (u32 i = 0; i < _fds.size(); ++i)
@@ -134,7 +136,7 @@ void	Server::acceptClient()
 	// ===== Store Client =====
 	Client	*client = new Client(clientSocket, inet_ntoa(clientAddress.sin_addr), ntohs(clientAddress.sin_port));
 
-	_clients.insert(std::make_pair(clientSocket, client));
+	_clients.push_back(client);
 }
 
 void	Server::readClient(u32 index)
@@ -149,11 +151,16 @@ void	Server::readClient(u32 index)
 		close(_fds[index].fd);
 
 		// 2. Delete client object
-		const std::map<i32, Client *>::iterator	it = _clients.find(_fds[index].fd);
-		if (it != _clients.end())
+		for (size_t i = 0; i < _clients.size(); ++i)
 		{
-			delete it->second;
-			_clients.erase(it);
+			if (_clients[i]->GetFD() == _fds[index].fd)
+			{
+				delete _clients[i];
+
+				_clients.erase(_clients.begin() + i);
+
+				break ;
+			}
 		}
 
 		// 3. Remove from pollfd
@@ -164,7 +171,13 @@ void	Server::readClient(u32 index)
 	{
 		buffer[bytesRead] = '\0';
 
-		const std::map<i32, Client *>::iterator	it = _clients.find(_fds[index].fd);
-		executeCommand(it->second, buffer);
+		for (u32 i = 0; i < _clients.size(); ++i)
+		{
+			if (_clients[i]->GetFD() == _fds[index].fd)
+			{
+				executeCommand(_clients[i], buffer);
+				break ;
+			}
+		}
 	}
 }

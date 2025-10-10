@@ -44,65 +44,38 @@ void	Server::executeCommandNonRegistered(Client *client, const std::vector<std::
 	if (tokens[0] == "CAP")
 		return ;
 
-	if (tokenSize == 1)
-	{
-		if (tokens[0] == "PASS" || tokens[0] == "USER")
-			client->PrintMessage(ERR_NEEDMOREPARAMS(tokens[0]));
-		else if (tokens[0] == "NICK")
-			client->PrintMessage(ERR_NONICKNAMEGIVEN);
-		else
-			client->PrintMessage(ERR_NOTREGISTERED);
-		return ;
-	}
-
 	if (tokens[0] == "PASS")
-		pass(client, tokens[1]);
+		pass(client, tokens, tokenSize);
 	else if (tokens[0] == "NICK")
-		nick(client, tokens[1]);
+		nick(client, tokens, tokenSize);
 	else if (tokens[0] == "USER")
-	{
-		if (tokenSize < 5)
-		{
-			client->PrintMessage(ERR_NEEDMOREPARAMS(tokens[0]));
-			return ;
-		}
-		user(client, tokens);
-	}
+		user(client, tokens, tokenSize);
 	else
-		client->PrintMessage(ERR_NOTREGISTERED);
+		client->SendMessage(ERR_NOTREGISTERED);
 
 	if (client->IsRegistered())
-		client->PrintWelcome();
+		client->SendWelcome();
 }
 
 void	Server::executeCommandRegistered(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {
+	// Forbidden commands
 	if (tokens[0] == "PASS" || tokens[0] == "USER")
-		client->PrintMessage(ERR_ALREADYREGISTRED);
-	else if (tokenSize == 1)
 	{
-		if (tokens[0] == "NICK")
-			client->PrintMessage(ERR_NONICKNAMEGIVEN);
-		else if (tokens[0] != "PRIVMSG" && tokens[0] != "JOIN" && tokens[0] != "TOPIC" && tokens[0] != "KICK" && tokens[0] != "NICK" && tokens[0] != "MODE")
-			client->PrintMessage(ERR_UNKNOWNCOMMAND(tokens[0]));
-		else
-			client->PrintMessage(ERR_NEEDMOREPARAMS(tokens[0]));
+		client->SendMessage(ERR_ALREADYREGISTRED);
 		return ;
 	}
-	else if (tokens[0] == "NICK")
-		nick(client, tokens[1]);
-	else if (tokens[0] == "PRIVMSG")
+
+	// Unknown commands
+	if (tokens[0] != "PRIVMSG" && tokens[0] != "JOIN" && tokens[0] != "TOPIC" && tokens[0] != "KICK"
+		&& tokens[0] != "NICK" && tokens[0] != "MODE" && tokens[0] != "INVITE" && tokens[0] != "PART")
 	{
-		if (tokenSize <= 2)
-		{
-			client->PrintMessage(ERR_NEEDMOREPARAMS(tokens[0]));
-			return ;
-		}
-		else
-			privmsg(client, tokens);
+		client->SendMessage(ERR_UNKNOWNCOMMAND(tokens[0]));
+		return ;
 	}
+
+	if (tokens[0] == "NICK")
+		nick(client, tokens, tokenSize);
 	else if (tokens[0] == "JOIN")
-		join(client, tokens);
-	else if (tokens[0] == "PART")
-		part(client, tokens[1], tokens[2]);
+		join(client, tokens, tokenSize);
 }

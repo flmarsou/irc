@@ -6,21 +6,19 @@ VPATH		:=	src : src/commands
 
 SRC			:=	main.cpp \
 				Server.cpp \
+				Client.cpp \
+				Channel.cpp \
 				commands.cpp \
 				pass.cpp \
 				nick.cpp \
 				user.cpp \
-				privmsg.cpp \
-				join.cpp \
-				part.cpp \
-				Client.cpp \
-				Channel.cpp \
+				join.cpp
 
 OBJ			:=	${addprefix obj/,${notdir $(SRC:.cpp=.o)}}
 
 # Variables
 CC			:=	c++
-CFLAGS		:=	-Wall -Werror -Wextra -O2 -std=c++98 -Iincludes -Isrc
+CFLAGS		:=	-Wall -O2 -std=c++98 -Iincludes -Isrc
 
 # Makefile
 all			:	${EXE}

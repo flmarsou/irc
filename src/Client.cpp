@@ -48,12 +48,12 @@ void		Client::SetUsername(const std::string &username) { _username = username; }
 //    Methods                                                                 //
 // ========================================================================== //
 
-void	Client::PrintMessage(const std::string &message) const
+void	Client::SendMessage(const std::string &message) const
 {
 	send(_fd, message.c_str(), message.size(), 0);
 }
 
-void	Client::PrintWelcome() const
+void	Client::SendWelcome() const
 {
 	const std::string	buffer = "Welcome to the IRC server, " + _nickname + "\n";
 
