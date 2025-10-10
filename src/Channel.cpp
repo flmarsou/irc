@@ -50,8 +50,11 @@ void				Channel::SetKey(const std::string &key) { _key = key; }
 const std::string	Channel::GetTopic() const { return (_topic); }
 void				Channel::SetTopic(const std::string &topic) { _topic = topic; }
 
-bool		Channel::GetMode(const Modes mode) const { return (_modes[mode]); }
-void		Channel::SetMode(const Modes mode, const bool set) { _modes[mode] = set; }
+bool				Channel::GetMode(const Modes mode) const { return (_modes[mode]); }
+void				Channel::SetMode(const Modes mode, const bool set) { _modes[mode] = set; }
+
+const i32			Channel::GetLimit() const { return (_limit); };
+void				Channel::SetLimit(const i32 limit) { _limit = limit; };
 
 // ========================================================================== //
 //    Methods                                                                 //
@@ -93,10 +96,48 @@ void	Channel::RemoveMember(const Client &client)
 
 	std::map<i32, const Client *>::iterator	it = _members.find(client.GetFD());
 
+	// Send part message to everyone
 	for (std::map<i32, const Client *>::iterator it = _members.begin(); it != _members.end(); ++it)
 		it->second->PrintMessage(RAW_PART(client.GetNickname(), client.GetUsername(), client.GetIP(), _name, "Leaving"));
 
 	_members.erase(it);
+}
+
+void	Channel::AddOperator(const Client &receiver, const Client &sender)
+{
+	if (!IsMember(receiver))
+	{
+		receiver.PrintMessage(ERR_NOSUCHNICK(receiver.GetNickname()));
+		return ;
+	}
+
+	for (std::vector<std::string>::iterator it = _operators.begin(); it != _operators.end(); ++it)
+	{
+		if (*it == receiver.GetNickname())
+			return ;
+	}
+
+	_operators.push_back(receiver.GetNickname());
+	receiver.PrintMessage(RAW_MODE_ADDOP(sender.GetNickname(), sender.GetUsername(), sender.GetIP(), _name, receiver.GetNickname()));
+}
+
+void	Channel::RemoveOperator(const Client &receiver, const Client &sender)
+{
+ 	if (!IsMember(receiver))
+	{
+		receiver.PrintMessage(ERR_NOSUCHNICK(receiver.GetNickname()));
+		return ;
+	}
+
+	for (std::vector<std::string>::iterator it = _operators.begin(); it != _operators.end(); ++it)
+	{
+		if (*it == receiver.GetNickname())
+		{
+			_operators.erase(it);
+			receiver.PrintMessage(RAW_MODE_REMOP(sender.GetNickname(), sender.GetUsername(), sender.GetIP(), _name, receiver.GetNickname()));
+			return ;
+		}
+	}
 }
 
 void	Channel::Broadcast(const Client &sender, const std::string &message)

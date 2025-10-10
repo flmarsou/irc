@@ -32,6 +32,9 @@ class	Channel
 		const std::string	GetTopic() const;
 		void				SetTopic(const std::string &topic);
 
+		const i32			GetLimit() const;
+		void				SetLimit(const i32 limit);
+
 		bool				GetMode(const Modes mode) const;
 		void				SetMode(const Modes mode, const bool set);
 
@@ -42,16 +45,21 @@ class	Channel
 		void	AddMember(const Client &client);
 		void	RemoveMember(const Client &client);
 
+		void	AddOperator(const Client &receiver, const Client &sender);
+		void	RemoveOperator(const Client &receiver, const Client &sender);
+
 		void	Broadcast(const Client &sender, const std::string &message);
 
 	private:
 		// ===== Data =====
 
 		std::map<i32, const Client *>	_members;
+		std::vector<std::string>		_operators;
 
 		const std::string		_name;
 		std::string				_key;
 		std::string				_topic;
+		i32						_limit;
 
 		bool					_modes[5];
 };
