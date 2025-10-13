@@ -56,7 +56,7 @@ void	Channel::AddMember(const Client *client)
 	if (IsMember(client->GetNickname()))
 		return ;
 
-	if (_limit != 0 && _limit >= _members.size())
+	if (_limit != 0 && _members.size() >= _limit)
 	{
 		std::cout << INFO << client->GetNickname() << " tried to join channel " << _name << " with limit " << _limit << RESET << std::endl;
 		client->SendMessage(ERR_CHANNELISFULL(_name));
@@ -79,6 +79,8 @@ void	Channel::AddMember(const Client *client)
 	// Refresh members list
 	client->SendMessage(RPL_NAMREPLY("ft_irc.serv", client->GetNickname(), _name, nicknameList));
 	client->SendMessage(RPL_ENDOFNAMES("ft_irc.serv", client->GetNickname(), _name));
+
+	std::cout << MSG << client->GetNickname() << " joined " << _name << RESET << std::endl;
 }
 
 void Channel::RemoveMember(const Client *client)
@@ -123,6 +125,8 @@ void	Channel::AddOperator(const Client *client, const std::string &nickname)
 
 	Broadcast(RAW_MODE_ADDOP(client->GetNickname(), client->GetUsername(), client->GetIP(), _name, nickname), client->GetNickname());
 	client->SendMessage(RAW_MODE_ADDOP(client->GetNickname(), client->GetUsername(), client->GetIP(), _name, nickname));
+
+	std::cout << MSG << client->GetNickname() << " added " << nickname << " from operators" RESET << std::endl;
 }
 
 void	Channel::RemoveOperator(const Client *client, const std::string &nickname)
@@ -142,6 +146,8 @@ void	Channel::RemoveOperator(const Client *client, const std::string &nickname)
 			_operators.erase(_operators.begin() + i);
 			Broadcast(RAW_MODE_REMOP(client->GetNickname(), client->GetUsername(), client->GetIP(), _name, nickname), client->GetNickname());
 			client->SendMessage(RAW_MODE_REMOP(client->GetNickname(), client->GetUsername(), client->GetIP(), _name, nickname));
+
+			std::cout << MSG << client->GetNickname() << " removed " << nickname << " from operators" RESET << std::endl;
 			break ;
 		}
 	}
