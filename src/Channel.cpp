@@ -49,7 +49,8 @@ void	Channel::AddMember(const Client *client)
 
 	_members.push_back(client);
 
-	Broadcast(RAW_JOIN(client->GetNickname(), client->GetUsername(), client->GetIP(), _name), client->GetNickname(), true);
+	Broadcast(RAW_JOIN(client->GetNickname(), client->GetUsername(), client->GetIP(), _name), client->GetNickname());
+	client->SendMessage(RAW_JOIN(client->GetNickname(), client->GetUsername(), client->GetIP(), _name));
 
 	std::string	nicknameList;
 	for (u32 i = 0; i < _members.size(); ++i)
@@ -86,13 +87,14 @@ bool	Channel::IsMember(const std::string &nickname)
 	return (false);
 }
 
-void	Channel::Broadcast(const std::string &message, const std::string &caster, const bool selfSend) const
+void	Channel::Broadcast(const std::string &message, const std::string &caster) const
 {
 	for (u32 i = 0; i < _members.size(); ++i)
 	{
-		if (_members[i]->GetNickname() != caster && !selfSend)
+		if (_members[i]->GetNickname() == caster)
 			continue ;
 
+		std::cout << _members[i]->GetNickname() << std::endl;
 		_members[i]->SendMessage(message);
 	}
 }

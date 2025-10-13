@@ -29,7 +29,7 @@ class	Channel
 		void	RemoveMember(const Client *client);
 		bool	IsMember(const std::string &nickname);
 
-		void	Broadcast(const std::string &message, const std::string &caster, const bool selfSend) const;
+		void	Broadcast(const std::string &message, const std::string &caster) const;
 
 	private:
 		// ===== Data =====
