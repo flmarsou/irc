@@ -41,9 +41,11 @@ void	Server::executeCommand(Client *client, const i8 *buffer)
 
 void	Server::executeCommandNonRegistered(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {
+	// HexChat Auth
 	if (tokens[0] == "CAP")
 		return ;
 
+	// Commands
 	if (tokens[0] == "PASS")
 		pass(client, tokens, tokenSize);
 	else if (tokens[0] == "NICK")
@@ -53,20 +55,23 @@ void	Server::executeCommandNonRegistered(Client *client, const std::vector<std::
 	else
 		client->SendMessage(ERR_NOTREGISTERED);
 
+	// Auth Successful
 	if (client->IsRegistered())
 		client->SendWelcome();
 }
 
 void	Server::executeCommandRegistered(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {
-	// Forbidden commands
+	// Forbidden Commands
+	// ==================
 	if (tokens[0] == "PASS" || tokens[0] == "USER")
 	{
 		client->SendMessage(ERR_ALREADYREGISTRED);
 		return ;
 	}
 
-	// Unknown commands
+	// Unknown Commands
+	// ================
 	if (tokens[0] != "PRIVMSG" && tokens[0] != "JOIN" && tokens[0] != "TOPIC" && tokens[0] != "KICK"
 		&& tokens[0] != "NICK" && tokens[0] != "MODE" && tokens[0] != "INVITE" && tokens[0] != "PART")
 	{
@@ -74,8 +79,12 @@ void	Server::executeCommandRegistered(Client *client, const std::vector<std::str
 		return ;
 	}
 
+	// Allowed Commands
+	// ================
 	if (tokens[0] == "NICK")
 		nick(client, tokens, tokenSize);
 	else if (tokens[0] == "JOIN")
 		join(client, tokens, tokenSize);
+	else if (tokens[0] == "PRIVMSG")
+		privmsg(client, tokens, tokenSize);
 }
