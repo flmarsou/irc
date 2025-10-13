@@ -87,4 +87,7 @@ void	Server::executeCommandRegistered(Client *client, const std::vector<std::str
 		join(client, tokens, tokenSize);
 	else if (tokens[0] == "PRIVMSG")
 		privmsg(client, tokens, tokenSize);
+	else if 
+		mode(client, tokens, tokenSize);
+	
 }
