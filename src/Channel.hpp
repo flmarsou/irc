@@ -23,6 +23,9 @@ class	Channel
 		const std::string	GetTopic() const;
 		void				SetTopic(const std::string &topic);
 
+		bool				GetTopicPerm() const;
+		void				SetTopicPerm(const bool topicPerm);
+
 		u32					GetLimit() const;
 		void				SetLimit(const u32 limit);
 
@@ -46,6 +49,7 @@ class	Channel
 
 		const std::string		_name;
 		std::string				_key;
+		bool					_topicPerm;
 		std::string				_topic;
 		u32						_limit;
 };

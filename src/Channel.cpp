@@ -42,6 +42,9 @@ void				Channel::SetKey(const std::string &key) { _key = key; }
 const std::string	Channel::GetTopic() const { return (_topic); }
 void				Channel::SetTopic(const std::string &topic) { _topic = topic; }
 
+bool				Channel::GetTopicPerm() const { return (_topicPerm); };
+void				Channel::SetTopicPerm(const bool topicPerm) {_topicPerm = topicPerm; }
+
 u32					Channel::GetLimit() const { return (_limit); }
 void				Channel::SetLimit(const u32 limit) { _limit = limit; }
 
@@ -77,8 +80,8 @@ void	Channel::AddMember(const Client *client)
 	}
 
 	// Refresh members list
-	client->SendMessage(RPL_NAMREPLY("ft_irc.serv", client->GetNickname(), _name, nicknameList));
-	client->SendMessage(RPL_ENDOFNAMES("ft_irc.serv", client->GetNickname(), _name));
+	client->SendMessage(RPL_NAMREPLY(client->GetNickname(), _name, nicknameList));
+	client->SendMessage(RPL_ENDOFNAMES(client->GetNickname(), _name));
 
 	std::cout << MSG << client->GetNickname() << " joined " << _name << RESET << std::endl;
 }
