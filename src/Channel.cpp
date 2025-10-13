@@ -11,6 +11,7 @@ Channel::Channel(const Client *creator, const std::string &name)
 	std::cout << INFO "Channel " << _name << " created by " << creator->GetNickname() << RESET << std::endl;
 
 	AddMember(creator);
+	AddOperator(creator, creator->GetNickname());
 }
 
 Channel::Channel(const Client *creator, const std::string &name, const std::string &key)
@@ -21,6 +22,7 @@ Channel::Channel(const Client *creator, const std::string &name, const std::stri
 	std::cout << INFO "Channel " << _name << " created by " << creator->GetNickname() << RESET << std::endl;
 
 	AddMember(creator);
+	AddOperator(creator, creator->GetNickname());
 }
 
 Channel::~Channel()
