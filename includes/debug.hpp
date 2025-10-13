@@ -36,11 +36,7 @@
 
 # define ERR_BADCHANMASK(channel)	"476 " + channel + " :Bad Channel Mask\r\n"
 
-# define RPL_NAMREPLY(server, target, channel, names) \
-	(std::string(":") + server + " 353 " + target + " = " + channel + " :" + names + "\r\n")
-
-# define RPL_ENDOFNAMES(server, target, channel) \
-	(std::string(":") + server + " 366 " + target + " " + channel + " :End of /NAMES list.\r\n")
+# define ERR_CHANNELISFULL(channel)	"471 " + channel + " :Cannot join channel (+l)\r\n"
 
 // ========================================================================== //
 //     MODE                                                                   //
@@ -77,3 +73,9 @@
 
 #define RAW_MODE_REMOP(sender, username, hostname, channel, target) \
     (":" + sender + "!~" + username + "@" + hostname + " MODE " + channel + " -o " + target + "\r\n")
+
+# define RPL_NAMREPLY(server, target, channel, names) \
+	(std::string(":") + server + " 353 " + target + " = " + channel + " :" + names + "\r\n")
+
+# define RPL_ENDOFNAMES(server, target, channel) \
+	(std::string(":") + server + " 366 " + target + " " + channel + " :End of /NAMES list.\r\n")
