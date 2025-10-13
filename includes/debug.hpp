@@ -71,6 +71,9 @@
 #define RAW_MODE_REMOP(sender, username, hostname, channel, target) \
     (":" + sender + "!~" + username + "@" + hostname + " MODE " + channel + " -o " + target + "\r\n")
 
+#define RAW_MODE(nickname, username, hostname, channel, mode, arg) \
+	":" + nickname + "!~" + username + "@" + hostname + " MODE " + channel + " " + mode + (arg.empty() ? "" : " " + arg) + "\r\n"
+
 # define RPL_NAMREPLY(server, target, channel, names) \
 	(std::string(":") + server + " 353 " + target + " = " + channel + " :" + names + "\r\n")
 
