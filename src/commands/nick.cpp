@@ -6,6 +6,16 @@ static bool	isCharCorrect(const i8 c)
 		c == '\\' || c == '`' || c == '^' || c == '{' || c == '}');
 }
 
+/**
+ * Usage:
+ * - NICK <nickname>
+ * 
+ * If no nickname is given, throw `ERR_NONICKNAMEGIVEN`.
+ * If the first character and leading characters are wrong, throw `ERR_ERRONEUSNICKNAME`.
+ * If the nickname is already used, throw `ERR_NICKNAMEINUSE`.
+ * 
+ * On success, broadcast `RAW_NICKNAME` to all Channels the client is a member of, and send `RAW_NICKNAME` to the client itself.
+ */
 void	Server::nick(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {
 	// Missing arguments
@@ -42,12 +52,13 @@ void	Server::nick(Client *client, const std::vector<std::string> &tokens, u32 to
 		}
 	}
 
-	// DOES NOT WORK
 	// Send changes to all channel members
 	for (u32 i = 0; i < _channels.size(); ++i)
 		if (_channels[i]->IsMember(client->GetNickname()))
-			_channels[i]->Broadcast(RAW_NICKNAME(client->GetNickname(), tokens[1], client->GetUsername(), client->GetIP()), client->GetNickname(), false);
+			_channels[i]->Broadcast(RAW_NICKNAME(client->GetNickname(), tokens[1], client->GetUsername(), client->GetIP()), client->GetNickname());
 
 	client->SendMessage(RAW_NICKNAME(client->GetNickname(), tokens[1], client->GetUsername(), client->GetIP()));
+	if (!client->GetNickname().empty())
+		std::cout << INFO "'" << client->GetNickname() << "\'" << " changed their nickname to " << "\'" << tokens[1] << "\'" RESET << std::endl;
 	client->SetNickname(tokens[1]);
 }
