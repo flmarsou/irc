@@ -59,6 +59,6 @@ void	Server::nick(Client *client, const std::vector<std::string> &tokens, u32 to
 
 	client->SendMessage(RAW_NICKNAME(client->GetNickname(), tokens[1], client->GetUsername(), client->GetIP()));
 	if (!client->GetNickname().empty())
-		std::cout << INFO "'" << client->GetNickname() << "\'" << " changed their nickname to " << "\'" << tokens[1] << "\'" RESET << std::endl;
+		std::cout << MSG "'" << client->GetNickname() << "\'" << " changed their nickname to " << "\'" << tokens[1] << "\'" RESET << std::endl;
 	client->SetNickname(tokens[1]);
 }
