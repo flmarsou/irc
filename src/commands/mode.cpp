@@ -77,12 +77,12 @@ void	Server::mode(Client *client, const std::vector<std::string> &tokens, u32 to
 			var ? channel->AddOperator(client, tokens[3]) : channel->RemoveOperator(client, tokens[3]);
 			break ;
 		case ('l'):
-			if (var && (tokenSize < 4 || !isInt(tokens[4])))
+			if (var && (tokenSize < 4 || !isInt(tokens[3])))
 			{
 				client->SendMessage(ERR_NEEDMOREPARAMS(tokens[0]));
 				return ;
 			}
-			var ? channel->SetLimit(std::strtol(tokens[4].c_str(), NULL, 10)) : channel->SetLimit(0);
+			var ? channel->SetLimit(std::strtol(tokens[3].c_str(), NULL, 10)) : channel->SetLimit(0);
 			break ;
 	}
 	
