@@ -16,15 +16,15 @@ Client::Client(const i32 fd, const i8 *ip, const u16 port)
 	std::cout << " - FD: " << _fd << '\n';
 	std::cout << " - IP: " << _ip << '\n';
 	std::cout << " - Port: " << _port << '\n';
-	std::cout << std::endl;
+	std::cout << RESET << std::endl;
 }
 
 Client::~Client()
 {
 	if (_nickname.empty())
-		std::cout << INFO "Client (fd=" << _fd << ") left!" << std::endl;
+		std::cout << INFO "Client (fd=" << _fd << ") left!" RESET << std::endl;
 	else
-		std::cout << INFO "Client " << _nickname << " (fd=" << _fd << ") left!" << std::endl;
+		std::cout << INFO "Client " << _nickname << " (fd=" << _fd << ") left!" RESET << std::endl;
 }
 
 // ========================================================================== //
