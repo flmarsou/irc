@@ -89,4 +89,6 @@ void	Server::executeCommandRegistered(Client *client, const std::vector<std::str
 		privmsg(client, tokens, tokenSize);
 	else if (tokens[0] == "MODE")
 		mode(client, tokens, tokenSize);
+	else if (tokens[0] == "TOPIC")
+		topic(client, tokens, tokenSize);
 }

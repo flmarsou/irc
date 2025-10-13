@@ -101,5 +101,23 @@ void	Server::mode(Client *client, const std::vector<std::string> &tokens, u32 to
 			}
 			break ;
 		}
+		case ('t'):
+		{
+			if (var)
+			{
+				channel->SetTopicPerm(true);
+				channel->Broadcast(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "+t", tokens[3]), client->GetNickname());
+				client->SendMessage(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "+t", tokens[3]));
+				std::cout << MSG << client->GetNickname() << " set channel " << tokens[1] << "'s topic permissions to operators"  RESET << std::endl;
+			}
+			else
+			{
+				channel->SetTopicPerm(false);
+				channel->Broadcast(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "-t", std::string("")), client->GetNickname());
+				client->SendMessage(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "-t", std::string("")));
+				std::cout << MSG << client->GetNickname() << " set channel " << tokens[1] << "'s topic permission to anyone" RESET << std::endl;
+			}
+		}
+		default: break ;
 	}
 }

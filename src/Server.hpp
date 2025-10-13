@@ -50,4 +50,5 @@ class	Server
 		void	join(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
 		void	privmsg(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
 		void	mode(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
+		void	topic(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
 };

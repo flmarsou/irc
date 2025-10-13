@@ -14,7 +14,8 @@ SRC			:=	main.cpp \
 				user.cpp \
 				join.cpp \
 				privmsg.cpp \
-				mode.cpp
+				mode.cpp \
+				topic.cpp
 
 OBJ			:=	${addprefix obj/,${notdir $(SRC:.cpp=.o)}}
 
