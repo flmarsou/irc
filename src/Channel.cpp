@@ -58,6 +58,7 @@ void	Channel::AddMember(const Client *client)
 
 	if (_limit != 0 && _limit >= _members.size())
 	{
+		std::cout << INFO << client->GetNickname() << " tried to join channel " << _name << " with limit " << _limit << RESET << std::endl;
 		client->SendMessage(ERR_CHANNELISFULL(_name));
 		return ;
 	}
@@ -163,7 +164,6 @@ void	Channel::Broadcast(const std::string &message, const std::string &caster) c
 		if (_members[i]->GetNickname() == caster)
 			continue ;
 
-		std::cout << _members[i]->GetNickname() << std::endl;
 		_members[i]->SendMessage(message);
 	}
 }
