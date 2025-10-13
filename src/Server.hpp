@@ -48,4 +48,5 @@ class	Server
 		void	nick(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
 		void	user(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
 		void	join(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
+		void	privmsg(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
 };
