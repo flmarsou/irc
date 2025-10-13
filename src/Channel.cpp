@@ -92,12 +92,19 @@ bool	Channel::IsMember(const std::string &nickname)
 
 void	Channel::AddOperator(const Client *client, const std::string &nickname)
 {
+	// Not a member
 	if (!IsMember(nickname))
 	{
 		client->SendMessage(ERR_NOSUCHNICK(nickname));
 		return ;
 	}
 
+	// Already an operator
+	for (u32 i = 0; i < _operators.size(); ++i)
+		if (_operators[i] == nickname)
+			return ;
+
+	// Add operator
 	_operators.push_back(nickname);
 
 	Broadcast(RAW_MODE_ADDOP(client->GetNickname(), client->GetUsername(), client->GetIP(), _name, nickname), client->GetNickname());
@@ -106,23 +113,24 @@ void	Channel::AddOperator(const Client *client, const std::string &nickname)
 
 void	Channel::RemoveOperator(const Client *client, const std::string &nickname)
 {
+	// Not a member
 	if (!IsMember(nickname))
 	{
-		client->SendMessage(ERR_NOSUCHCHANNEL(nickname));
+		client->SendMessage(ERR_NOSUCHNICK(nickname));
 		return ;
 	}
 
+	// Add operator
 	for (u32 i = 0; i < _operators.size(); ++i)
 	{
 		if (_operators[i] == nickname)
 		{
 			_operators.erase(_operators.begin() + i);
+			Broadcast(RAW_MODE_REMOP(client->GetNickname(), client->GetUsername(), client->GetIP(), _name, nickname), client->GetNickname());
+			client->SendMessage(RAW_MODE_REMOP(client->GetNickname(), client->GetUsername(), client->GetIP(), _name, nickname));
 			break ;
 		}
 	}
-
-	Broadcast(RAW_MODE_REMOP(client->GetNickname(), client->GetUsername(), client->GetIP(), _name, nickname), client->GetNickname());
-	client->SendMessage(RAW_MODE_REMOP(client->GetNickname(), client->GetUsername(), client->GetIP(), _name, nickname));
 }
 
 bool	Channel::IsOperator(const std::string &nickname)
