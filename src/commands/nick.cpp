@@ -19,7 +19,7 @@ static bool	isCharCorrect(const i8 c)
 void	Server::nick(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {
 	// Missing arguments
-	if (tokenSize <= 1)
+	if (tokenSize < 2)
 	{
 		client->SendMessage(ERR_NONICKNAMEGIVEN);
 		return ;

@@ -5,12 +5,19 @@
  * - PRIVMSG <nickname> <message>
  * - PRIVMSG <#channel> <message>
  * 
+ * If no receiver or message given, throw `ERR_NEEDMOREPARAMS`.
  * If a Client is found, send `RAW_PRIVMSG` to the client.
  * If a Channel is found, broadcast `RAW_PRIVMSG` to all its members.
  * If nothing is found, doesn't do anything.
  */
 void	Server::privmsg(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {
+	if (tokenSize < 3)
+	{
+		client->SendMessage(ERR_NEEDMOREPARAMS(tokens[0]));
+		return ;
+	}
+
 	std::string	message;
 
 	for (u32 i = 2; i < tokens.size(); ++i)

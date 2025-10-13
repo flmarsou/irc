@@ -10,7 +10,7 @@
  */
 void	Server::pass(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {
-	if (tokenSize <= 1)
+	if (tokenSize < 2)
 	{
 		client->SendMessage(ERR_NEEDMOREPARAMS(tokens[0]));
 		return ;
