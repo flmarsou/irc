@@ -1,5 +1,16 @@
 #include "Server.hpp"
 
+/**
+ * Usage:
+ * - JOIN <#channel>
+ * 
+ * If no channel is given, throw `ERR_NEEDMOREPARAMS`.
+ * If the first character is wrong, throw `ERR_BADCHANMASK`.
+ * 
+ * Note:
+ * - If the channel already exists, try to join it.
+ * - If the channel doesn't exist, create it.
+ */
 void	Server::join(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {
 	if (tokenSize <= 1)

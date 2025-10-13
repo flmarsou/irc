@@ -1,6 +1,16 @@
 #include "Server.hpp"
 
-// USER <username> 0 * :<realname>
+/**
+ * Usage:
+ * - USER <username> 0 * :<realname>
+ * 
+ * If not enough arguments are given, throw `ERR_NEEDMOREPARAMS`.
+ * If the client is already registered, throw `ERR_ALREADYREGISTRED`.
+ * If the arguments are wrong, throw `ERR_NEEDMOREPARAMS`.
+ * 
+ * Note:
+ * - Only <username> is useful and must be stored, <realname> doesn't serve any purpose.
+ */
 void	Server::user(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {
 	// Missing arguments
