@@ -2,7 +2,7 @@
 
 /**
  * Usage:
- * - TOPIC <#channel> <topic>
+ * - TOPIC <#channel> [<topic>]
  */
 void	Server::topic(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {

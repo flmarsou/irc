@@ -51,6 +51,10 @@ static bool	parser(Client *client, const std::vector<std::string> &tokens, u32 t
 	return (true);
 }
 
+/**
+ * Usage:
+ * - MODE <#channel> <+/-arg> [<value>]
+ */
 void	Server::mode(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {
 	Channel	*channel;
