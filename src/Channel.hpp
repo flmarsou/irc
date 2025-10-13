@@ -29,6 +29,10 @@ class	Channel
 		void	RemoveMember(const Client *client);
 		bool	IsMember(const std::string &nickname);
 
+		void	AddOperator(const Client *client, const std::string &nickname);
+		void	RemoveOperator(const Client *client, const std::string &nickname);
+		bool	IsOperator(const std::string &nickname);
+
 		void	Broadcast(const std::string &message, const std::string &caster) const;
 
 	private:
