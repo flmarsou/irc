@@ -34,20 +34,17 @@
 //     JOIN                                                                   //
 // ========================================================================== //
 
-# define ERR_BADCHANMASK(channel)	"476 " + channel + " :Bad Channel Mask\r\n"
-
 # define ERR_CHANNELISFULL(channel)	"471 " + channel + " :Cannot join channel (+l)\r\n"
+# define ERR_BADCHANMASK(channel)	"476 " + channel + " :Bad Channel Mask\r\n"
 
 // ========================================================================== //
 //     MODE                                                                   //
 // ========================================================================== //
 
-# define ERR_NOSUCHCHANNEL(channel)		"403 " + channel + " :No such channel\r\n"
-
 # define ERR_NOSUCHNICK(nickname)		"401 " + nickname + " :No such nick/channel\r\n"
-
+# define ERR_NOSUCHCHANNEL(channel)		"403 " + channel + " :No such channel\r\n"
 # define ERR_UNKNOWNMODE(arg, channel)	("472 " + std::string(1, arg) + " :is unknown mode char to me for " + channel + "\r\n")
-
+# define ERR_CHANOPRIVSNEEDED(channel)	"482 " + channel + " :You're not channel operator\r\n"
 
 // ========================================================================== //
 //     RAW MESSAGES                                                           //
