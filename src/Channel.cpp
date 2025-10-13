@@ -6,6 +6,7 @@
 
 Channel::Channel(const Client *creator, const std::string &name)
 	:	_name(name)
+	,	_limit(0)
 {
 	std::cout << INFO "Channel " << _name << " created by " << creator->GetNickname() << RESET << std::endl;
 
@@ -15,6 +16,7 @@ Channel::Channel(const Client *creator, const std::string &name)
 Channel::Channel(const Client *creator, const std::string &name, const std::string &key)
 	:	_name(name)
 	,	_key(key)
+	,	_limit(0)
 {
 	std::cout << INFO "Channel " << _name << " created by " << creator->GetNickname() << RESET << std::endl;
 
@@ -38,6 +40,9 @@ void				Channel::SetKey(const std::string &key) { _key = key; }
 const std::string	Channel::GetTopic() const { return (_topic); }
 void				Channel::SetTopic(const std::string &topic) { _topic = topic; }
 
+u32					Channel::GetLimit() const { return (_limit); }
+void				Channel::SetLimit(const u32 limit) { _limit = limit; }
+
 // ========================================================================== //
 //    Methods                                                                 //
 // ========================================================================== //
@@ -48,6 +53,12 @@ void	Channel::AddMember(const Client *client)
 {
 	if (IsMember(client->GetNickname()))
 		return ;
+
+	if (_limit != 0 && _limit >= _members.size())
+	{
+		client->SendMessage(ERR_CHANNELISFULL(_name));
+		return ;
+	}
 
 	_members.push_back(client);
 

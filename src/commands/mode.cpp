@@ -58,6 +58,12 @@ void	Server::mode(Client *client, const std::vector<std::string> &tokens, u32 to
 	if (!parser(client, tokens, tokenSize, _channels, channel))
 		return ;
 
+	if (!channel->IsOperator(client->GetNickname()))
+	{
+		client->SendMessage(ERR_CHANOPRIVSNEEDED(tokens[1]));
+		return ;
+	}
+
 	bool	var = tokens[2][0] == '+' ? true : false;
 
 	switch (tokens[2][1])

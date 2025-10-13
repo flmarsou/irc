@@ -23,6 +23,9 @@ class	Channel
 		const std::string	GetTopic() const;
 		void				SetTopic(const std::string &topic);
 
+		u32					GetLimit() const;
+		void				SetLimit(const u32 limit);
+
 		// ===== Methods =====
 
 		void	AddMember(const Client *client);
@@ -44,5 +47,5 @@ class	Channel
 		const std::string		_name;
 		std::string				_key;
 		std::string				_topic;
-		i32						_limit;
+		u32						_limit;
 };
