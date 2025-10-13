@@ -1,5 +1,16 @@
 #include "Server.hpp"
 
+static bool	isInt(const std::string &input)
+{
+	i8	*end;
+	const i64	tmp = std::strtol(input.c_str(), &end, 10);
+
+	if (tmp < U32MIN || tmp > U32MAX || *end != '\0')
+		return (false);
+
+	return (true);
+}
+
 static bool	parser(Client *client, const std::vector<std::string> &tokens, u32 tokenSize, const std::vector<Channel *> channels, Channel *&channel)
 {
 	if (tokenSize < 3)
@@ -52,7 +63,7 @@ void	Server::mode(Client *client, const std::vector<std::string> &tokens, u32 to
 	switch (tokens[2][1])
 	{
 		case ('o'): 
-			if (tokenSize < 3)
+			if (tokenSize < 4)
 			{
 				client->SendMessage(ERR_NEEDMOREPARAMS(tokens[0]));
 				return ;
@@ -60,12 +71,12 @@ void	Server::mode(Client *client, const std::vector<std::string> &tokens, u32 to
 			var ? channel->AddOperator(client, tokens[3]) : channel->RemoveOperator(client, tokens[3]);
 			break ;
 		case ('l'):
-			if (var && tokenSize < 3)
+			if (var && (tokenSize < 4 || !isInt(tokens[4])))
 			{
 				client->SendMessage(ERR_NEEDMOREPARAMS(tokens[0]));
 				return ;
 			}
-			var ? channel->AddOperator(client, tokens[3]) : channel->RemoveOperator(client, tokens[3]);
+			var ? channel->SetLimit(std::strtol(tokens[4].c_str(), NULL, 10)) : channel->SetLimit(0);
 			break ;
 	}
 	
