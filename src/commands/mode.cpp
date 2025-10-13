@@ -68,7 +68,8 @@ void	Server::mode(Client *client, const std::vector<std::string> &tokens, u32 to
 
 	switch (tokens[2][1])
 	{
-		case ('o'): 
+		case ('o'):
+		{
 			if (tokenSize < 4)
 			{
 				client->SendMessage(ERR_NEEDMOREPARAMS(tokens[0]));
@@ -76,14 +77,29 @@ void	Server::mode(Client *client, const std::vector<std::string> &tokens, u32 to
 			}
 			var ? channel->AddOperator(client, tokens[3]) : channel->RemoveOperator(client, tokens[3]);
 			break ;
+		}
 		case ('l'):
+		{
 			if (var && (tokenSize < 4 || !isInt(tokens[3])))
 			{
 				client->SendMessage(ERR_NEEDMOREPARAMS(tokens[0]));
 				return ;
 			}
-			var ? channel->SetLimit(std::strtol(tokens[3].c_str(), NULL, 10)) : channel->SetLimit(0);
+			if (var)
+			{
+				channel->SetLimit(std::strtol(tokens[3].c_str(), NULL, 10));
+				channel->Broadcast(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "+l", tokens[3]), client->GetNickname());
+				client->SendMessage(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "+l", tokens[3]));
+				std::cout << MSG << client->GetNickname() << " set channel " << tokens[1] << "'s limit to " << tokens[3] << RESET << std::endl;
+			}
+			else
+			{
+				channel->SetLimit(0);
+				channel->Broadcast(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "-l", std::string("")), client->GetNickname());
+				client->SendMessage(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "-l", std::string("")));
+				std::cout << MSG << client->GetNickname() << " removed channel " << tokens[1] << "'s limit" << RESET << std::endl;
+			}
 			break ;
+		}
 	}
-	
 }
