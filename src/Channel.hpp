@@ -28,6 +28,9 @@ class	Channel
 		u32					GetLimit() const;
 		void				SetLimit(const u32 limit);
 
+		bool				GetInvitePerm() const;
+		void				SetInvitePerm(const bool inviteOnly);
+
 		// ===== Methods =====
 
 		void	AddMember(const Client *client);
@@ -39,6 +42,11 @@ class	Channel
 		bool	IsOperator(const std::string &nickname);
 		void	EditOperator(const std::string &oldNickname, const std::string &newNickname);
 
+		void	AddInvitee(const Client *client, const std::string &nickname);
+		void	RemoveInvitee(const Client *client, const std::string &nickname);
+		bool	IsInvitee(const std::string &nickname);
+		void	EditInvitee(const std::string &oldNickname, const std::string &newNickname);
+
 		void	Broadcast(const std::string &message, const std::string &caster) const;
 
 	private:
@@ -46,10 +54,12 @@ class	Channel
 
 		std::vector<const Client *>	_members;
 		std::vector<std::string>	_operators;
+		std::vector<std::string>	_invitee;
 
 		const std::string		_name;
 		std::string				_key;
 		bool					_topicPerm;
 		std::string				_topic;
 		u32						_limit;
+		bool					_inviteOnly;
 };

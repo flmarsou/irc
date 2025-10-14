@@ -32,6 +32,14 @@ void	Server::join(Client *client, const std::vector<std::string> &tokens, u32 to
 					return ;
 				}
 			}
+			if (_channels[i]->GetInvitePerm())
+			{
+				if (!_channels[i]->IsInvitee(client->GetNickname()))
+				{
+					client->SendMessage(ERR_INVITEONLYCHAN(tokens[1]));
+					return ;
+				}
+			}
 			_channels[i]->AddMember(client);
 			return ;
 		}

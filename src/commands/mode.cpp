@@ -168,6 +168,28 @@ void	Server::mode(Client *client, const std::vector<std::string> &tokens, u32 to
 			}
 			break ;
 		}
+		case ('i'):
+		{
+			if (var)
+			{
+				channel->SetInvitePerm(var);
+
+				channel->Broadcast(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "+i", std::string("")), client->GetNickname());
+				client->SendMessage(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "+i", std::string("")));
+
+				std::cout << MSG << client->GetNickname() << " set channel " << tokens[1] << " to invite only"  RESET << std::endl;
+			}
+			else
+			{
+				channel->SetInvitePerm(var);
+
+				channel->Broadcast(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "-i", std::string("")), client->GetNickname());
+				client->SendMessage(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "-i", std::string("")));
+
+				std::cout << MSG << client->GetNickname() << " unset channel " << tokens[1] << " to invite only" RESET << std::endl;
+			}
+			break ;
+		}
 		default: break ;
 	}
 }
