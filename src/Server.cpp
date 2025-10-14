@@ -155,7 +155,9 @@ void	Server::readClient(u32 index)
 		{
 			if (_clients[i]->GetFD() == _fds[index].fd)
 			{
-				delete _clients[i];
+				delete _clients[i];				// Delete Object
+
+				disconnectClient(_clients[i]);	// Notify Others
 
 				_clients.erase(_clients.begin() + i);
 
@@ -178,6 +180,22 @@ void	Server::readClient(u32 index)
 				executeCommand(_clients[i], buffer);
 				break ;
 			}
+		}
+	}
+}
+
+void	Server::disconnectClient(const Client *client)
+{
+	for (u32 i = 0; i < _channels.size(); ++i)
+	{
+		if (_channels[i]->IsMember(client->GetNickname()))
+		{
+			_channels[i]->Broadcast(RAW_QUIT(client->GetNickname(), client->GetUsername(), client->GetIP(), "Client disconnected\r\n"), client->GetNickname());
+			_channels[i]->RemoveMember(client);
+			if (_channels[i]->IsOperator(client->GetNickname()))
+				_channels[i]->RemoveOperator(client, client->GetNickname());
+			if (_channels[i]->IsInvitee(client->GetNickname()))
+				_channels[i]->RemoveInvitee(client, client->GetNickname());
 		}
 	}
 }

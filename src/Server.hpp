@@ -39,6 +39,7 @@ class	Server
 
 		void	acceptClient();
 		void	readClient(u32 index);
+		void	disconnectClient(const Client *client);
 
 		void	executeCommand(Client *client, const i8 *buffer);
 		void	executeCommandNonRegistered(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
