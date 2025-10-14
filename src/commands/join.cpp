@@ -41,6 +41,8 @@ void	Server::join(Client *client, const std::vector<std::string> &tokens, u32 to
 				}
 			}
 			_channels[i]->AddMember(client);
+			if (_channels[i]->IsInvitee(client->GetNickname()))
+				_channels[i]->RemoveInvitee(client, client->GetNickname());
 			return ;
 		}
 	}
