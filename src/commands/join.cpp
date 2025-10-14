@@ -24,14 +24,26 @@ void	Server::join(Client *client, const std::vector<std::string> &tokens, u32 to
 	{
 		if (_channels[i]->GetName() == tokens[1])
 		{
+			if (!_channels[i]->GetKey().empty())
+			{
+				if (tokenSize < 3)
+				{
+					client->SendMessage(ERR_);
+					return ;
+				}
+				if (_channels[i]->GetKey() != tokens[2])
+				{
+					client->SendMessage(ERR_)
+					return ;
+				}
+			}
 			_channels[i]->AddMember(client);
 			return ;
 		}
 	}
 
+
 	// Create channel
-	Channel	*channel = (tokens.size() == 3)
-		? new Channel(client, tokens[1], tokens[2])
-		: new Channel(client, tokens[1]);
+	Channel	*channel = new Channel(client, tokens[1]);
 	_channels.push_back(channel);
 }

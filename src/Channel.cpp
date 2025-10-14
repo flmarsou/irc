@@ -6,17 +6,9 @@
 
 Channel::Channel(const Client *creator, const std::string &name)
 	:	_name(name)
-	,	_limit(0)
-{
-	std::cout << INFO "Channel " << _name << " created by " << creator->GetNickname() << RESET << std::endl;
-
-	AddMember(creator);
-	AddOperator(creator, creator->GetNickname());
-}
-
-Channel::Channel(const Client *creator, const std::string &name, const std::string &key)
-	:	_name(name)
-	,	_key(key)
+	,	_key("")
+	,	_topicPerm(false)
+	,	_topic("")
 	,	_limit(0)
 {
 	std::cout << INFO "Channel " << _name << " created by " << creator->GetNickname() << RESET << std::endl;

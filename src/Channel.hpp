@@ -10,7 +10,6 @@ class	Channel
 		// ===== Setup =====
 
 		Channel(const Client *creator, const std::string &name);
-		Channel(const Client *creator, const std::string &name, const std::string &key);
 		~Channel();
 
 		// ===== Getters & Setters =====
