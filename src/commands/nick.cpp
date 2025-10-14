@@ -9,12 +9,6 @@ static bool	isCharCorrect(const i8 c)
 /**
  * Usage:
  * - NICK <nickname>
- * 
- * If no nickname is given, throw `ERR_NONICKNAMEGIVEN`.
- * If the first character and leading characters are wrong, throw `ERR_ERRONEUSNICKNAME`.
- * If the nickname is already used, throw `ERR_NICKNAMEINUSE`.
- * 
- * On success, broadcast `RAW_NICKNAME` to all Channels the client is a member of, and send `RAW_NICKNAME` to the client itself.
  */
 void	Server::nick(Client *client, const std::vector<std::string> &tokens, u32 tokenSize)
 {
