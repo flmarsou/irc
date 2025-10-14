@@ -40,6 +40,9 @@ void				Channel::SetTopicPerm(const bool topicPerm) {_topicPerm = topicPerm; }
 u32					Channel::GetLimit() const { return (_limit); }
 void				Channel::SetLimit(const u32 limit) { _limit = limit; }
 
+bool				Channel::GetInvitePerm() const { return (_inviteOnly); };
+void				Channel::SetInvitePerm(const bool inviteOnly) {_inviteOnly = _inviteOnly; }
+
 // ========================================================================== //
 //    Methods                                                                 //
 // ========================================================================== //
@@ -164,6 +167,60 @@ void	Channel::EditOperator(const std::string &oldNickname, const std::string &ne
 		{
 			_operators.erase(_operators.begin() + i);
 			_operators.push_back(newNickname);
+		}
+	}
+}
+
+//    Invite                                //
+// ===================================== //
+
+void	Channel::AddInvitee(const Client *client, const std::string &nickname)
+{
+	if (IsMember(nickname))
+		return ;
+
+	// Already an invitee
+	for (u32 i = 0; i < _invitee.size(); ++i)
+		if (_invitee[i] == nickname)
+			return ;
+
+	// Add invitee
+	_invitee.push_back(nickname);
+
+	client->SendMessage();
+
+	std::cout << MSG << client->GetNickname() << " added " << nickname << " from invitee" RESET << std::endl;
+}
+
+void	Channel::RemoveInvitee(const Client *client, const std::string &nickname)
+{
+	// Add invitee
+	for (u32 i = 0; i < _invitee.size(); ++i)
+	{
+		if (_invitee[i] == nickname)
+		{
+			_invitee.erase(_invitee.begin() + i);
+			break ;
+		}
+	}
+}
+
+bool	Channel::IsInvitee(const std::string &nickname)
+{
+	for (u32 i = 0; i < _invitee.size(); ++i)
+		if (_invitee[i] == nickname)
+			return (true);
+	return (false);
+}
+
+void	Channel::EditInvitee(const std::string &oldNickname, const std::string &newNickname)
+{
+	for (u32 i = 0; i < _invitee.size(); ++i)
+	{
+		if (_invitee[i] == oldNickname)
+		{
+			_invitee.erase(_invitee.begin() + i);
+			_invitee.push_back(newNickname);
 		}
 	}
 }
