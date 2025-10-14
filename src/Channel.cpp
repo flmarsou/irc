@@ -68,7 +68,13 @@ void	Channel::AddMember(const Client *client)
 	{
 		if (!nicknameList.empty())
 			nicknameList += " ";
-		nicknameList += _members[i]->GetNickname();
+
+		const std::string	&nick = _members[i]->GetNickname();
+
+		if (IsOperator(nick))
+			nicknameList += "@" + nick;
+		else
+			nicknameList += nick;
 	}
 
 	// Refresh members list
