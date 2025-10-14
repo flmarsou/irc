@@ -187,13 +187,14 @@ void	Server::disconnectClient(const Client *client)
 {
 	for (u32 i = 0; i < _channels.size(); ++i)
 	{
+		if (_channels[i]->IsInvitee(client->GetNickname()))
+			_channels[i]->RemoveInvitee(client, client->GetNickname());
+
 		if (_channels[i]->IsMember(client->GetNickname()))
 		{
 			_channels[i]->Broadcast(RAW_QUIT(client->GetNickname(), client->GetUsername(), client->GetIP(), "Client disconnected\r\n"), client->GetNickname());
 			if (_channels[i]->IsOperator(client->GetNickname()))
 				_channels[i]->RemoveOperator(client, client->GetNickname());
-			if (_channels[i]->IsInvitee(client->GetNickname()))
-				_channels[i]->RemoveInvitee(client, client->GetNickname());
 			_channels[i]->RemoveMember(client);
 		}
 	}
