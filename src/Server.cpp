@@ -190,11 +190,11 @@ void	Server::disconnectClient(const Client *client)
 		if (_channels[i]->IsMember(client->GetNickname()))
 		{
 			_channels[i]->Broadcast(RAW_QUIT(client->GetNickname(), client->GetUsername(), client->GetIP(), "Client disconnected\r\n"), client->GetNickname());
-			_channels[i]->RemoveMember(client);
 			if (_channels[i]->IsOperator(client->GetNickname()))
 				_channels[i]->RemoveOperator(client, client->GetNickname());
 			if (_channels[i]->IsInvitee(client->GetNickname()))
 				_channels[i]->RemoveInvitee(client, client->GetNickname());
+			_channels[i]->RemoveMember(client);
 		}
 	}
 }

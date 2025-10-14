@@ -180,32 +180,34 @@ void	Channel::EditOperator(const std::string &oldNickname, const std::string &ne
 //    Invite                             //
 // ===================================== //
 
-void	Channel::AddInvitee(const Client *client, const std::string &nickname)
+void	Channel::AddInvitee(const Client *client, const Client *invitee)
 {
-	if (IsMember(nickname))
+	if (IsMember(invitee->GetNickname()))
 		return ;
 
+	client->SendMessage(RPL_INVITING(client->GetNickname(), invitee->GetNickname(), _name));
+	invitee->SendMessage(INVITE_MESSAGE(client->GetNickname(), invitee->GetNickname(), _name));
+
+	std::cout << MSG << client->GetNickname() << " added " << invitee->GetNickname() << " from invitee" RESET << std::endl;
+
 	// Already an invitee
-	for (u32 i = 0; i < _invitee.size(); ++i)
-		if (_invitee[i] == nickname)
+	for (u32 i = 0; i < _invitees.size(); ++i)
+		if (_invitees[i] == invitee->GetNickname())
 			return ;
 
 	// Add invitee
-	_invitee.push_back(nickname);
+	_invitees.push_back(invitee->GetNickname());
 
-	client->SendMessage(INVITE_MESSAGE(client->GetNickname(), nickname, _name));
-
-	std::cout << MSG << client->GetNickname() << " added " << nickname << " from invitee" RESET << std::endl;
 }
 
 void	Channel::RemoveInvitee(const Client *client, const std::string &nickname)
 {
 	// Add invitee
-	for (u32 i = 0; i < _invitee.size(); ++i)
+	for (u32 i = 0; i < _invitees.size(); ++i)
 	{
-		if (_invitee[i] == nickname)
+		if (_invitees[i] == nickname)
 		{
-			_invitee.erase(_invitee.begin() + i);
+			_invitees.erase(_invitees.begin() + i);
 			break ;
 		}
 	}
@@ -213,20 +215,22 @@ void	Channel::RemoveInvitee(const Client *client, const std::string &nickname)
 
 bool	Channel::IsInvitee(const std::string &nickname)
 {
-	for (u32 i = 0; i < _invitee.size(); ++i)
-		if (_invitee[i] == nickname)
+	for (u32 i = 0; i < _invitees.size(); ++i)
+		if (_invitees[i] == nickname)
+		{
 			return (true);
+		}
 	return (false);
 }
 
 void	Channel::EditInvitee(const std::string &oldNickname, const std::string &newNickname)
 {
-	for (u32 i = 0; i < _invitee.size(); ++i)
+	for (u32 i = 0; i < _invitees.size(); ++i)
 	{
-		if (_invitee[i] == oldNickname)
+		if (_invitees[i] == oldNickname)
 		{
-			_invitee.erase(_invitee.begin() + i);
-			_invitee.push_back(newNickname);
+			_invitees.erase(_invitees.begin() + i);
+			_invitees.push_back(newNickname);
 		}
 	}
 }

@@ -42,7 +42,7 @@ class	Channel
 		bool	IsOperator(const std::string &nickname);
 		void	EditOperator(const std::string &oldNickname, const std::string &newNickname);
 
-		void	AddInvitee(const Client *client, const std::string &nickname);
+		void	AddInvitee(const Client *client, const Client *invitee);
 		void	RemoveInvitee(const Client *client, const std::string &nickname);
 		bool	IsInvitee(const std::string &nickname);
 		void	EditInvitee(const std::string &oldNickname, const std::string &newNickname);
@@ -54,7 +54,7 @@ class	Channel
 
 		std::vector<const Client *>	_members;
 		std::vector<std::string>	_operators;
-		std::vector<std::string>	_invitee;
+		std::vector<std::string>	_invitees;
 
 		const std::string		_name;
 		std::string				_key;
