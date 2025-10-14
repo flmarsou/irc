@@ -37,6 +37,7 @@ class	Channel
 		void	AddOperator(const Client *client, const std::string &nickname);
 		void	RemoveOperator(const Client *client, const std::string &nickname);
 		bool	IsOperator(const std::string &nickname);
+		void	EditOperator(const std::string &oldNickname, const std::string &newNickname);
 
 		void	Broadcast(const std::string &message, const std::string &caster) const;
 

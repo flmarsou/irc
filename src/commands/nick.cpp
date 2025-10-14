@@ -49,7 +49,10 @@ void	Server::nick(Client *client, const std::vector<std::string> &tokens, u32 to
 	// Send changes to all channel members
 	for (u32 i = 0; i < _channels.size(); ++i)
 		if (_channels[i]->IsMember(client->GetNickname()))
+		{
+			_channels[i]->EditOperator(client->GetNickname(), tokens[1]);
 			_channels[i]->Broadcast(RAW_NICKNAME(client->GetNickname(), tokens[1], client->GetUsername(), client->GetIP()), client->GetNickname());
+		}
 
 	client->SendMessage(RAW_NICKNAME(client->GetNickname(), tokens[1], client->GetUsername(), client->GetIP()));
 	if (!client->GetNickname().empty())

@@ -156,6 +156,18 @@ bool	Channel::IsOperator(const std::string &nickname)
 	return (false);
 }
 
+void	Channel::EditOperator(const std::string &oldNickname, const std::string &newNickname)
+{
+	for (u32 i = 0; i < _operators.size(); ++i)
+	{
+		if (_operators[i] == oldNickname)
+		{
+			_operators.erase(_operators.begin() + i);
+			_operators.push_back(newNickname);
+		}
+	}
+}
+
 //    Utils                              //
 // ===================================== //
 void	Channel::Broadcast(const std::string &message, const std::string &caster) const
