@@ -144,6 +144,8 @@ void	Server::mode(Client *client, const std::vector<std::string> &tokens, u32 to
 			}
 			break ;
 		}
+		//     Key                                                      //
+		// ============================================================ //
 		case ('k'):
 		{
 			if (var && tokenSize < 4)
@@ -168,6 +170,8 @@ void	Server::mode(Client *client, const std::vector<std::string> &tokens, u32 to
 			}
 			break ;
 		}
+		//     Invite                                                   //
+		// ============================================================ //
 		case ('i'):
 		{
 			if (var)
@@ -190,6 +194,5 @@ void	Server::mode(Client *client, const std::vector<std::string> &tokens, u32 to
 			}
 			break ;
 		}
-		default: break ;
 	}
 }
