@@ -153,11 +153,10 @@ void	Server::mode(Client *client, const std::vector<std::string> &tokens, u32 to
 			}
 			if (var)
 			{
-				channel->SetKey(tokens[4]);
-
-				channel->Broadcast(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "+k", tokens[4]), client->GetNickname());
-				client->SendMessage(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "+k", tokens[4]));
-				std::cout << MSG << client->GetNickname() << " set channel " << tokens[1] << "'s key to " << tokens[4] << RESET << std::endl;
+				channel->SetKey(tokens[3]);
+				channel->Broadcast(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "+k", tokens[3]), client->GetNickname());
+				client->SendMessage(RAW_MODE(client->GetNickname(), client->GetUsername(), client->GetIP(), tokens[1], "+k", tokens[3]));
+				std::cout << MSG << client->GetNickname() << " set channel " << tokens[1] << "'s key to " << tokens[3] << RESET << std::endl;
 			}
 			else
 			{

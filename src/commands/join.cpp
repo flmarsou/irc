@@ -26,14 +26,9 @@ void	Server::join(Client *client, const std::vector<std::string> &tokens, u32 to
 		{
 			if (!_channels[i]->GetKey().empty())
 			{
-				if (tokenSize < 3)
+				if (tokenSize < 3 || _channels[i]->GetKey() != tokens[2])
 				{
-					client->SendMessage(ERR_);
-					return ;
-				}
-				if (_channels[i]->GetKey() != tokens[2])
-				{
-					client->SendMessage(ERR_)
+					client->SendMessage(ERR_BADCHANNELKEY(tokens[1]));
 					return ;
 				}
 			}
@@ -41,7 +36,6 @@ void	Server::join(Client *client, const std::vector<std::string> &tokens, u32 to
 			return ;
 		}
 	}
-
 
 	// Create channel
 	Channel	*channel = new Channel(client, tokens[1]);
