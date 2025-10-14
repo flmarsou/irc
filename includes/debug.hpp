@@ -23,6 +23,9 @@
 # define RAW_PART(nickname, username, hostname, channel, reason) \
 	":" + nickname + "!~" + username + "@" + hostname + " PART " + channel + " :" + reason + "\r\n"
 
+# define RAW_QUIT(nickname, username, hostname, message) \
+	":" + nickname + "!~" + username + "@" + hostname + " QUIT :" + message + "\r\n"
+
 // ========================================================================== //
 //     PASS                                                                   //
 // ========================================================================== //
@@ -89,3 +92,13 @@
 
 # define RPL_TOPIC(nickname, channel, topic) \
 	":ft_irc.nanachi 332 " + nickname + " " + channel + " :" + topic + "\r\n"
+
+// ========================================================================== //
+//     INVITE                                                                 //
+// ========================================================================== //
+
+# define RPL_INVITING(inviter, invited, channel) \
+    ":ft_irc.nanachi 341 " + std::string(inviter) + " " + std::string(invited) + " " + std::string(channel) + "\r\n"
+
+# define INVITE_MESSAGE(inviter, invited, channel) \
+    ":" + std::string(inviter) + "!~" + inviter + "@host INVITE " + std::string(invited) + " :" + std::string(channel) + "\r\n"
