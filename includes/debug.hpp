@@ -102,3 +102,10 @@
 
 # define INVITE_MESSAGE(inviter, invited, channel) \
     ":" + std::string(inviter) + "!~" + inviter + "@host INVITE " + std::string(invited) + " :" + std::string(channel) + "\r\n"
+
+// ========================================================================== //
+//     KICK                                                                   //
+// ========================================================================== //
+
+# define RPL_KICK(kicker, target, channel, comment) \
+    ":" + std::string(kicker) + "!~" + std::string(kicker) + "@host KICK " + std::string(channel) + " " + std::string(target) + " :" + std::string(comment) + "\r\n"
