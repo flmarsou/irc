@@ -155,10 +155,9 @@ void	Server::readClient(u32 index)
 		{
 			if (_clients[i]->GetFD() == _fds[index].fd)
 			{
-				delete _clients[i];				// Delete Object
-
 				disconnectClient(_clients[i]);	// Notify Others
 
+				delete _clients[i];
 				_clients.erase(_clients.begin() + i);
 
 				break ;
