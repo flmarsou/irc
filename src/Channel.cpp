@@ -10,6 +10,7 @@ Channel::Channel(const Client *creator, const std::string &name)
 	,	_topicPerm(false)
 	,	_topic("")
 	,	_limit(0)
+	,	_inviteOnly(false)
 {
 	std::cout << INFO "Channel " << _name << " created by " << creator->GetNickname() << RESET << std::endl;
 
