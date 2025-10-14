@@ -91,4 +91,6 @@ void	Server::executeCommandRegistered(Client *client, const std::vector<std::str
 		mode(client, tokens, tokenSize);
 	else if (tokens[0] == "TOPIC")
 		topic(client, tokens, tokenSize);
+	else if (tokens[0] == "INVITE")
+		topic(client, tokens, tokenSize);
 }
