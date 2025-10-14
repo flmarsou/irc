@@ -188,7 +188,7 @@ void	Server::disconnectClient(const Client *client)
 	for (u32 i = 0; i < _channels.size(); ++i)
 	{
 		if (_channels[i]->IsInvitee(client->GetNickname()))
-			_channels[i]->RemoveInvitee(client, client->GetNickname());
+			_channels[i]->RemoveInvitee(client->GetNickname());
 
 		if (_channels[i]->IsMember(client->GetNickname()))
 		{

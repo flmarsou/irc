@@ -201,7 +201,7 @@ void	Channel::AddInvitee(const Client *client, const Client *invitee)
 
 }
 
-void	Channel::RemoveInvitee(const Client *client, const std::string &nickname)
+void	Channel::RemoveInvitee(const std::string &nickname)
 {
 	// Add invitee
 	for (u32 i = 0; i < _invitees.size(); ++i)

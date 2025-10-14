@@ -15,7 +15,7 @@
 # define ERR_NEEDMOREPARAMS(command)	"461 " + command + " :Not enough parameters\r\n"
 
 # define RAW_PRIVMSG(sender, hostname, receiver, message) \
-	":" + sender + "!~" + sender + "@" + hostname + " PRIVMSG " + receiver + " :" + message + "\r\n"
+	":" + sender + "!~" + sender + "@" + hostname + " PRIVMSG " + receiver + " " + message + "\r\n"
 
 # define RAW_BROADCAST(sender, username, hostname, channel, message) \
 	":" + sender + "!~" + username + "@" + hostname + " PRIVMSG " + channel + " :" + message + "\r\n"

@@ -43,7 +43,7 @@ class	Channel
 		void	EditOperator(const std::string &oldNickname, const std::string &newNickname);
 
 		void	AddInvitee(const Client *client, const Client *invitee);
-		void	RemoveInvitee(const Client *client, const std::string &nickname);
+		void	RemoveInvitee(const std::string &nickname);
 		bool	IsInvitee(const std::string &nickname);
 		void	EditInvitee(const std::string &oldNickname, const std::string &newNickname);
 
