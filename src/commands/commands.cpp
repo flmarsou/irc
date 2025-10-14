@@ -93,4 +93,6 @@ void	Server::executeCommandRegistered(Client *client, const std::vector<std::str
 		topic(client, tokens, tokenSize);
 	else if (tokens[0] == "INVITE")
 		invite(client, tokens, tokenSize);
+	else if (tokens[0] == "KICK")
+		kick(client, tokens, tokenSize);
 }

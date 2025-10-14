@@ -53,4 +53,5 @@ class	Server
 		void	mode(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
 		void	topic(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
 		void	invite(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
+		void	kick(Client *client, const std::vector<std::string> &tokens, u32 tokenSize);
 };
