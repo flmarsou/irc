@@ -46,8 +46,10 @@
 //     JOIN                                                                   //
 // ========================================================================== //
 
-# define ERR_CHANNELISFULL(channel)	"471 " + channel + " :Cannot join channel (+l)\r\n"
-# define ERR_BADCHANMASK(channel)	"476 " + channel + " :Bad Channel Mask\r\n"
+# define ERR_CHANNELISFULL(channel)		"471 " + channel + " :Cannot join channel (+l)\r\n"
+# define ERR_INVITEONLYCHAN(channel)	"473 " + channel + " :Cannot join channel (+i)\r\n"
+# define ERR_BADCHANNELKEY(channel)		"475 " + channel + " :Cannot join channel (+k)\r\n"
+# define ERR_BADCHANMASK(channel)		"476 " + channel + " :Bad Channel Mask\r\n"
 
 # define RAW_JOIN(nickname, username, hostname, channel) \
 	":" + nickname + "!~" + username + "@" + hostname + " JOIN :" + channel + "\r\n"
