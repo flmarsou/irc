@@ -56,6 +56,10 @@ Server::Server(const u16 serverPort, const std::string &password)
 	_fds.push_back(pfd);
 
 	std::cout << SUCCESS "Server IRC started" RESET << '\n';
+
+	// ===== Init Bot =====
+	_bot = new Bot();
+	_clients.push_back(_bot);
 }
 
 Server::~Server()

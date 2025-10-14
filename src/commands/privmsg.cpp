@@ -26,6 +26,11 @@ void	Server::privmsg(Client *client, const std::vector<std::string> &tokens, u32
 	// =========================
 	if (tokens[1][0] != '#')
 	{
+		if (tokens[1] == "Bot" && (message == "ping" || message == ":ping"))
+		{
+			client->SendMessage(RAW_PRIVMSG(std::string("Bot"), "1.1.1.1", client->GetNickname(), "pong"));
+			return ;
+		}
 		for (u32 i = 0; i < _clients.size(); ++i)
 		{
 			if (_clients[i]->GetNickname() == tokens[1])

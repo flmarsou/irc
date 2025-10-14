@@ -4,6 +4,7 @@
 
 # include "Client.hpp"
 # include "Channel.hpp"
+# include "Bot.hpp"
 
 # define IPv4			AF_INET
 # define TCP			SOCK_STREAM
@@ -34,6 +35,8 @@ class	Server
 		std::vector<pollfd>		_fds;
 		std::vector<Client *>	_clients;
 		std::vector<Channel *>	_channels;
+
+		Bot						*_bot;
 
 		// ===== Methods =====
 
