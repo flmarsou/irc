@@ -41,7 +41,7 @@ u32					Channel::GetLimit() const { return (_limit); }
 void				Channel::SetLimit(const u32 limit) { _limit = limit; }
 
 bool				Channel::GetInvitePerm() const { return (_inviteOnly); };
-void				Channel::SetInvitePerm(const bool inviteOnly) {_inviteOnly = _inviteOnly; }
+void				Channel::SetInvitePerm(const bool inviteOnly) {_inviteOnly = inviteOnly; }
 
 // ========================================================================== //
 //    Methods                                                                 //
@@ -177,7 +177,7 @@ void	Channel::EditOperator(const std::string &oldNickname, const std::string &ne
 	}
 }
 
-//    Invite                                //
+//    Invite                             //
 // ===================================== //
 
 void	Channel::AddInvitee(const Client *client, const std::string &nickname)
@@ -193,7 +193,7 @@ void	Channel::AddInvitee(const Client *client, const std::string &nickname)
 	// Add invitee
 	_invitee.push_back(nickname);
 
-	client->SendMessage();
+	client->SendMessage(INVITE_MESSAGE(client->GetNickname(), nickname, _name));
 
 	std::cout << MSG << client->GetNickname() << " added " << nickname << " from invitee" RESET << std::endl;
 }
